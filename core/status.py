@@ -3,6 +3,7 @@ from core import loader
 from core import config
 import time
 import json
+import os
 
 
 class Status():
@@ -13,8 +14,11 @@ class Status():
     def __init__(self, configFilePath):
         VERSION = 1
         self.outputToBar(json.dumps({'version': VERSION}), False)
+        self._configFilePath = configFilePath
+        self._configModTime = os.path.getmtime(configFilePath)
+        self.config = config.Config(self._configFilePath)
+        self._pluginModTime = os.path.getmtime(self.config.generalSettings['plugins'])
         self.outputToBar('[', False)
-        self.config = config.Config(configFilePath)
         self.loader = loader.PluginLoader(
             self.config.generalSettings['plugins'], self.config.pluginSettings)
 
@@ -30,7 +34,15 @@ class Status():
         """
         Calls a plugin's main method after each interval.
         """
-        time.sleep(0.5)
+        # Reload plugins and config if either the config file or plugin
+        # directory are modified.
+        if self._configModTime != os.path.getmtime(self._configFilePath) or \
+        self._pluginModTime != os.path.getmtime(self.config.generalSettings['plugins']):
+            self.config.pluginSettings, self.config.generalSettings = self.config.reload()
+            self.loader = loader.PluginLoader(
+                self.config.generalSettings['plugins'], self.config.pluginSettings)
+
+        time.sleep(self.config.generalSettings['interval'])
         data = []
         for obj in self.loader.objects:
             data.append(obj.main())
