@@ -1,5 +1,4 @@
 import configparser
-import os.path
 
 
 class Config():
@@ -8,12 +7,7 @@ class Config():
     application.
     """
     def __init__(self, filepath):
-        if filepath is None:
-            self._filePath = os.path.join(os.path.expanduser('~'), '.i3-py3-status.conf')
-        else:
-            self._filePath = filepath
-        self._conf = configparser.SafeConfigParser()
-        self._conf.read(self._filePath)
+        self._filePath = filepath
         self.pluginSettings, self.generalSettings = self.reload()
 
     def reload(self):
@@ -21,6 +15,8 @@ class Config():
         Reload the configuration from the file. This is in its own function
         so that it can be called at any time by another class.
         """
+        self._conf = configparser.SafeConfigParser()
+        self._conf.read(self._filePath)
         general = self._replaceDataTypes(dict(self._conf.items('general')))
         self._conf.remove_section('general')
         pluginSettings = []
