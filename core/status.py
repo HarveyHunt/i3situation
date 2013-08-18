@@ -1,9 +1,10 @@
 import sys
-from core import loader
-from core import config
+import logging
 import time
 import json
 import os
+from core import loader
+from core import config
 
 
 class Status():
@@ -17,6 +18,18 @@ class Status():
         self._configFilePath = configFilePath
         self._configModTime = os.path.getmtime(configFilePath)
         self.config = config.Config(self._configFilePath)
+        logger = logging.getLogger()
+        handler = logging.FileHandler(self.config.generalSettings['logFile'])
+        # Remove standard stream handler as it will interfere with the JSON
+        # output.
+        logger.removeHandler(logger.handlers[0])
+        logger.addHandler(handler)
+        formatter = logging.Formatter(('[%(asctime)s] - %(levelname)s'
+           ' - %(filename)s - %(funcName)s - %(message)s'),
+           '%d/%m/%Y %I:%M:%S %p')
+        handler.setFormatter(formatter)
+        logger.setLevel(self.config.generalSettings['loggingLevel'])
+        handler.setLevel(self.config.generalSettings['loggingLevel'])
         self._pluginModTime = os.path.getmtime(self.config.generalSettings['plugins'])
         self.outputToBar('[', False)
         self.loader = loader.PluginLoader(

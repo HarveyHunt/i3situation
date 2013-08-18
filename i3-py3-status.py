@@ -2,6 +2,7 @@
 from core.status import Status
 import argparse
 import os
+import logging
 
 if __name__ == '__main__':
     defaultPath = os.path.join(os.path.expanduser('~'), '.i3-py3-status.conf')
