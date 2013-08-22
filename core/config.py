@@ -66,6 +66,8 @@ class Config():
                 dictionary[k] = True
             elif v in ['false', 'False', 'off']:
                 dictionary[k] = False
+            elif k == 'logFile' and '~' in v:
+                dictionary[k] = v.replace('~', os.path.expanduser('~'))
             elif v in loggingLevels:
                 dictionary[k] = loggingLevels[v]
             elif isinstance(v, str) and v.isnumeric():
