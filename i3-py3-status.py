@@ -12,5 +12,6 @@ if __name__ == '__main__':
             Harvey Hunt <harveyhuntnexus@gmail.com>""")
     args = parser.parse_args()
     s = Status()
+    logging.debug('Initialised Status object')
     while True:
         s.run()

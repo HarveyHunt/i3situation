@@ -13,18 +13,16 @@ class Status():
     application.
     """
     def __init__(self):
-        VERSION = 1
-        self.outputToBar(json.dumps({'version': VERSION}), False)
-        self.outputToBar('[', False)
         self.config = config.Config()
         self._configFilePath = self.config.configPath
         self._pluginPath = self.config.pluginPath
         self._configModTime = os.path.getmtime(self._configFilePath)
+        self._pluginModTime = os.path.getmtime(self._pluginPath)
         logger = logging.getLogger()
+        # If a stream handler has been attached, remove it.
+        if logger.handlers:
+            logger.removeHandler(logger.handlers[0])
         handler = logging.FileHandler(self.config.generalSettings['logFile'])
-        # Remove standard stream handler as it will interfere with the JSON
-        # output.
-        logger.removeHandler(logger.handlers[0])
         logger.addHandler(handler)
         formatter = logging.Formatter(('[%(asctime)s] - %(levelname)s'
            ' - %(filename)s - %(funcName)s - %(message)s'),
@@ -32,7 +30,14 @@ class Status():
         handler.setFormatter(formatter)
         logger.setLevel(self.config.generalSettings['loggingLevel'])
         handler.setLevel(self.config.generalSettings['loggingLevel'])
-        self._pluginModTime = os.path.getmtime(self._configFilePath)
+        logging.debug('Config loaded from {0}'.format(self._configFilePath))
+        logging.debug('Plugin path is located at {0}'.format(self._pluginPath))
+        logging.debug('Last config modification time is: {0}'.format(self._configModTime))
+        logging.debug('Last plugin modification time is: {0}'.format(self._pluginModTime))
+        self.outputToBar('{\"version\":1}', False)
+        self.outputToBar('[', False)
+        logging.debug('Sent initial JSON data to i3bar.')
+        logging.debug('Beginning plugin loading process')
         self.loader = loader.PluginLoader(
             self._pluginPath, self.config.pluginSettings)
 
@@ -52,7 +57,9 @@ class Status():
         # directory are modified.
         if self._configModTime != os.path.getmtime(self._configFilePath) or \
         self._pluginModTime != os.path.getmtime(self._pluginPath):
+            logging.debug('Reloading config file as files have been modified.')
             self.config.pluginSettings, self.config.generalSettings = self.config.reload()
+            logging.debug('Reloading plugins as files have been modified.')
             self.loader = loader.PluginLoader(
                 self._pluginPath, self.config.pluginSettings)
 
@@ -61,3 +68,4 @@ class Status():
         for obj in self.loader.objects:
             data.append(obj.main())
         self.outputToBar(json.dumps(data))
+        logging.debug('Output to bar')

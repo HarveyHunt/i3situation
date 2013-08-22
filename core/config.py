@@ -1,7 +1,6 @@
 import os
 import errno
 import configparser
-import logging
 
 
 class Config():
@@ -51,7 +50,6 @@ class Config():
             pluginSettings.append(dict(self._conf.items(section)))
             pluginSettings[index].update({'name': section})
             pluginSettings[-1] = self._replaceDataTypes(pluginSettings[-1])
-        logging.debug('Test')
         return (pluginSettings, general)
 
     def _replaceDataTypes(self, dictionary):

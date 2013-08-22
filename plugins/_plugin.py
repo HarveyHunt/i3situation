@@ -6,13 +6,13 @@ class Plugin():
     """
     def __init__(self, config, defaults):
         self._outputOptions = {
-            'color': '#FFFFFF',
-            'min_width': 1,
-            'align': 'center',
-            'name': '',
-            'urgent': False,
-            'seperator': True,
-            'seperator_block_width': 9}
+            'color': None,
+            'min_width': None,
+            'align': None,
+            'name': None,
+            'urgent': None,
+            'seperator': None,
+            'seperator_block_width': None}
         # Replace default values with user defined ones.
         for k, v in config.items():
             self.options[k] = v
@@ -24,4 +24,5 @@ class Plugin():
         Output all of the options and data for a segment.
         """
         self._outputOptions.update({'full_text': fullText, 'short_text': shortText})
+        self._outputOptions = {k: v for k, v in self._outputOptions.items() if v is not None}
         return self._outputOptions

@@ -1,5 +1,6 @@
 import glob
 import imp
+import logging
 import os.path
 
 
@@ -48,7 +49,11 @@ class PluginLoader():
                 # plugin class.
                 pluginClass = getattr(module, module.__all__)
                 objects.append(pluginClass(settings))
+                logging.debug('Loaded a plugin object based upon {0}'.format(
+                    settings['plugin']))
             else:
+                logging.critical('Missing plugin {0} was not found in {1}'.format(
+                    settings['plugin'], self.dirPath))
                 raise MissingPlugin('The plugin {0} was not found in {1}'.format(
                     settings['plugin'], self.dirPath))
         return objects
@@ -64,8 +69,10 @@ class PluginLoader():
         for f in glob.glob(os.path.join(self.dirPath, '[!_]*.py')):
             if not any(os.path.splitext(f)[0] == os.path.splitext(x)[0]
                     for x in _pluginFiles):
+                logging.debug('Adding plugin {0}'.format(f))
                 _pluginFiles.append(f)
         for f in _pluginFiles:
             plugin = self._loadFromFile(f)
             plugins[plugin.__name__] = plugin
+            logging.debug('Loaded module object for plugin: {0}'.format(f))
         return plugins
