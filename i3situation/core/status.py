@@ -3,8 +3,8 @@ import logging
 import time
 import json
 import os
-from core import loader
-from core import config
+from i3situation.core import loader
+from i3situation.core import config
 
 
 class Status():
@@ -62,6 +62,8 @@ class Status():
             logging.debug('Reloading plugins as files have been modified.')
             self.loader = loader.PluginLoader(
                 self._pluginPath, self.config.pluginSettings)
+            self._pluginModTime = os.path.getmtime(self._pluginPath)
+            self._configModTime = os.path.getmtime(self._configFilePath)
 
         time.sleep(self.config.generalSettings['interval'])
         data = []

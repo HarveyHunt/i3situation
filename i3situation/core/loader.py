@@ -2,6 +2,7 @@ import glob
 import imp
 import logging
 import os.path
+import compileall
 
 
 class MissingPlugin(Exception):
@@ -18,21 +19,39 @@ class PluginLoader():
     """
     def __init__(self, dirPath, config):
         self.dirPath = dirPath
+        self._compileFiles()
         self._config = config
         self.plugins = self.refreshFiles()
         self.objects = self.loadObjects()
 
-    def _loadFromFile(self, filePath):
+    def _compileFiles(self):
         """
-        Accepts a path to a plugin and returns a module object.
-        Also works with compiled python files.
+        Compiles python plugin files in order to be processed by the loader.
+        It compiled the plugins if they have been update or haven't yet been
+        compiled.
         """
-        name, ext = os.path.splitext(os.path.split(filePath)[-1])
-        ext = ext.lower()
-        if ext == '.pyc':
-            plugin = imp.load_compiled(name, filePath)
-        elif ext == '.py':
-            plugin = imp.load_source(name, filePath)
+        for f in glob.glob(os.path.join(self.dirPath, '*.py')):
+            # Check for compiled Python files that aren't in the __pycache__.
+            if not os.path.isfile(os.path.join(self.dirPath, f + 'c')):
+                compileall.compile_dir(self.dirPath, quiet=True)
+                logging.debug('Compiled plugins as a new plugin has been added.')
+                return
+            elif os.getmtime(os.path.join(self.dirPath, f)) > os.getmtime(
+                os.path.join(self.dirPath, f + 'c')):
+                compileall.compile_dir(self.dirPath, quiet=True)
+                logging.debug('Compiled plugins as a plugin has been changed.')
+                return
+
+    def _loadCompiled(self, filePath):
+        """
+        Accepts a path to a compiled plugin and returns a module object.
+        """
+        name = os.path.splitext(os.path.split(filePath)[-1])[0]
+        pluginDirectory = os.sep.join(os.path.split(filePath)[0:-1])
+        compiledDirectory = os.path.join(pluginDirectory, '__pycache__')
+        # Use glob to autocomplete the filename.
+        compiledFile = glob.glob(os.path.join(compiledDirectory, (name + '.*')))[0]
+        plugin = imp.load_compiled(name, compiledFile)
         return plugin
 
     def loadObjects(self):
@@ -72,7 +91,7 @@ class PluginLoader():
                 logging.debug('Adding plugin {0}'.format(f))
                 _pluginFiles.append(f)
         for f in _pluginFiles:
-            plugin = self._loadFromFile(f)
+            plugin = self._loadCompiled(f)
             plugins[plugin.__name__] = plugin
             logging.debug('Loaded module object for plugin: {0}'.format(f))
         return plugins
