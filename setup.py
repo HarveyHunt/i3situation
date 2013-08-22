@@ -9,7 +9,7 @@ def read(fname):
 
 setup(name='i3-py3-status',
       packages=find_packages(),
-      version='0.2',
+      version='0.3',
       scripts=['i3-py3-status.py'],
       description='A replacement for i3status that allows for the use of plugins.',
       author='Harvey Hunt',
