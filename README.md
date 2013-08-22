@@ -26,7 +26,7 @@ The minimum that you need to enter in order to run the application is as follows
   
 You then need to change the status_command value in the bar section of your i3 configuration to:
 
-    status_command i3situation.py
+    status_command i3situation
 
 TODO
 =============
