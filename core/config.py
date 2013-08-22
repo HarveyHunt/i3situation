@@ -1,16 +1,39 @@
+import os
+import errno
 import configparser
 import logging
 
 
 class Config():
     """
-    Provides a simplified interface to the configuration of the
-    application.
+    Provides a simplified interface to the configuration of the application.
     """
-    def __init__(self, filepath):
-        self._filePath = filepath
+    def __init__(self):
+        folderLocations = [os.path.join(os.path.expanduser('~'), '.i3-py3-status'),
+                '/etc/i3-py3-status']
+        for path in folderLocations:
+            if os.path.isdir(path):
+                self._folderPath = path
+                break
+        else:
+            self._folderPath = folderLocations[0]
+            self._touchDir(self._folderPath)
+        self.pluginPath = os.path.join(self._folderPath, 'plugins')
+        self._touchDir(self.pluginPath)
+        self.configPath = os.path.join(self._folderPath, 'config')
+        if not os.path.isfile(self.configPath):
+            open(self.configPath, 'w').close()
         self.pluginSettings, self.generalSettings = self.reload()
-        print(self.generalSettings)
+
+    def _touchDir(self, path):
+        """
+        A helper function to create a directory if it doesn't exist.
+        """
+        try:
+            os.makedirs(path)
+        except OSError as e:
+            if e.errno != errno.EEXIST:
+                raise
 
     def reload(self):
         """
@@ -20,7 +43,7 @@ class Config():
         self._conf = configparser.SafeConfigParser()
         # Preserve the case of sections and keys.
         self._conf.optionxform = str
-        self._conf.read(self._filePath)
+        self._conf.read(self.configPath)
         general = self._replaceDataTypes(dict(self._conf.items('general')))
         self._conf.remove_section('general')
         pluginSettings = []

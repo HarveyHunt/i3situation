@@ -12,12 +12,14 @@ class Status():
     Handles the running of the status utility and acts as the glue for the
     application.
     """
-    def __init__(self, configFilePath):
+    def __init__(self):
         VERSION = 1
         self.outputToBar(json.dumps({'version': VERSION}), False)
-        self._configFilePath = configFilePath
-        self._configModTime = os.path.getmtime(configFilePath)
-        self.config = config.Config(self._configFilePath)
+        self.outputToBar('[', False)
+        self.config = config.Config()
+        self._configFilePath = self.config.configPath
+        self._pluginPath = self.config.pluginPath
+        self._configModTime = os.path.getmtime(self._configFilePath)
         logger = logging.getLogger()
         handler = logging.FileHandler(self.config.generalSettings['logFile'])
         # Remove standard stream handler as it will interfere with the JSON
@@ -30,10 +32,9 @@ class Status():
         handler.setFormatter(formatter)
         logger.setLevel(self.config.generalSettings['loggingLevel'])
         handler.setLevel(self.config.generalSettings['loggingLevel'])
-        self._pluginModTime = os.path.getmtime(self.config.generalSettings['plugins'])
-        self.outputToBar('[', False)
+        self._pluginModTime = os.path.getmtime(self._configFilePath)
         self.loader = loader.PluginLoader(
-            self.config.generalSettings['plugins'], self.config.pluginSettings)
+            self._pluginPath, self.config.pluginSettings)
 
     def outputToBar(self, message, comma=True):
         """
@@ -50,10 +51,10 @@ class Status():
         # Reload plugins and config if either the config file or plugin
         # directory are modified.
         if self._configModTime != os.path.getmtime(self._configFilePath) or \
-        self._pluginModTime != os.path.getmtime(self.config.generalSettings['plugins']):
+        self._pluginModTime != os.path.getmtime(self._pluginPath):
             self.config.pluginSettings, self.config.generalSettings = self.config.reload()
             self.loader = loader.PluginLoader(
-                self.config.generalSettings['plugins'], self.config.pluginSettings)
+                self._pluginPath, self.config.pluginSettings)
 
         time.sleep(self.config.generalSettings['interval'])
         data = []
