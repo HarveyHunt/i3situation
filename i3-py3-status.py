@@ -2,6 +2,7 @@
 from core.status import Status
 import argparse
 import os
+import logging
 
 if __name__ == '__main__':
     defaultPath = os.path.join(os.path.expanduser('~'), '.i3-py3-status.conf')
@@ -9,11 +10,7 @@ if __name__ == '__main__':
             written in pure Python 3. This application supports heavy \
             customisation through a simple plugin system. Developed by \
             Harvey Hunt <harveyhuntnexus@gmail.com>""")
-    parser.add_argument('-c', '--config', action='store',
-            help='The full path to the configuration file. \
-                    Defaults to ~/.i3-py3-status.conf',
-                        default=defaultPath)
     args = parser.parse_args()
-    s = Status(args.config)
+    s = Status()
     while True:
         s.run()
