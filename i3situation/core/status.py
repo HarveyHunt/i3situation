@@ -3,7 +3,7 @@ import logging
 import time
 import json
 import os
-from i3situation.core import loader
+from i3situation.core import pluginManager
 from i3situation.core import config
 
 
