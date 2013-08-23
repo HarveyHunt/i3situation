@@ -7,7 +7,7 @@ Installation
 =============
 
 At the moment, the way to install i3situation is in a manual manner. It is assumed that this repository has been
-cloned and that you're in the folder that was cloned.
+cloned and that you're in the folder that it was cloned into.
 
     sudo python setup.py install
     mkdir ~/.i3situation
