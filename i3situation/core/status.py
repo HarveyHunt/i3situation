@@ -14,6 +14,7 @@ class Status():
     """
     def __init__(self):
         self.config = config.Config()
+        self.outputDict = {}
         self._configFilePath = self.config.configPath
         self._pluginPath = self.config.pluginPath
         self._configModTime = os.path.getmtime(self._configFilePath)
@@ -38,8 +39,9 @@ class Status():
         self.outputToBar('[', False)
         logging.debug('Sent initial JSON data to i3bar.')
         logging.debug('Beginning plugin loading process')
-        self.loader = loader.PluginLoader(
+        self.loader = pluginManager.PluginLoader(
             self._pluginPath, self.config.pluginSettings)
+        self.threadManager = pluginManager.ThreadManager(self.outputDict)
 
     def outputToBar(self, message, comma=True):
         """
@@ -49,25 +51,32 @@ class Status():
             message += ','
         sys.stdout.write(message + '\n')
 
+    def reload(self):
+        logging.debug('Reloading config file as files have been modified.')
+        self.config.pluginSettings, self.config.generalSettings = self.config.reload()
+        logging.debug('Reloading plugins as files have been modified.')
+        self.loader = pluginManager.PluginLoader(
+            self._pluginPath, self.config.pluginSettings)
+        self._pluginModTime = os.path.getmtime(self._pluginPath)
+        self._configModTime = os.path.getmtime(self._configFilePath)
+
+    def runPlugins(self):
+        for obj in self.loader.objects:
+            self.threadManager.addThread(obj.main, obj.options['interval'])
+
     def run(self):
         """
         Calls a plugin's main method after each interval.
         """
-        # Reload plugins and config if either the config file or plugin
-        # directory are modified.
-        if self._configModTime != os.path.getmtime(self._configFilePath) or \
-        self._pluginModTime != os.path.getmtime(self._pluginPath):
-            logging.debug('Reloading config file as files have been modified.')
-            self.config.pluginSettings, self.config.generalSettings = self.config.reload()
-            logging.debug('Reloading plugins as files have been modified.')
-            self.loader = loader.PluginLoader(
-                self._pluginPath, self.config.pluginSettings)
-            self._pluginModTime = os.path.getmtime(self._pluginPath)
-            self._configModTime = os.path.getmtime(self._configFilePath)
-
-        time.sleep(self.config.generalSettings['interval'])
-        data = []
-        for obj in self.loader.objects:
-            data.append(obj.main())
-        self.outputToBar(json.dumps(data))
-        logging.debug('Output to bar')
+        self.runPlugins()
+        while True:
+            # Reload plugins and config if either the config file or plugin
+            # directory are modified.
+            if self._configModTime != os.path.getmtime(self._configFilePath) or \
+            self._pluginModTime != os.path.getmtime(self._pluginPath):
+                self.threadManager.killAllThreads()
+                self.reload()
+                self.runPlugins()
+            self.outputToBar(json.dumps(list(self.outputDict.values())))
+            logging.debug('Output to bar')
+            time.sleep(self.config.generalSettings['interval'])

@@ -3,7 +3,6 @@ import imp
 import logging
 import time
 import os.path
-import queue
 import threading
 import compileall
 
@@ -14,18 +13,17 @@ class MissingPlugin(Exception):
 
 class Thread(threading.Thread):
 
-    def __init__(self, func, queue, interval):
+    def __init__(self, func, interval, outputDict):
         super().__init__(group=None, daemon=True)
-        self.q = queue
         self.func = func
+        self.outputDict = outputDict
         self.interval = interval
 
     def run(self):
         self.running = True
         while self.running:
             ret = self.func()
-            self.q.put(ret)
-            self.q.task_done()
+            self.outputDict[ret['name']] = ret
             time.sleep(self.interval)
 
     def stop(self):
@@ -34,16 +32,16 @@ class Thread(threading.Thread):
 
 class ThreadManager():
 
-    def __init__(self):
-        self.q = queue.Queue()
+    def __init__(self, outputDict):
         self._threadPool = []
+        self.outputDict = outputDict
 
     def addThread(self, func, interval):
-        t = Thread(func, self.q, interval)
+        t = Thread(func, interval, self.outputDict)
         t.start()
         self._threadPool.append(t)
 
-    def killThreads(self):
+    def killAllThreads(self):
         for t in self._threadPool:
             t.stop()
 

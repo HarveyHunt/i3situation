@@ -70,4 +70,6 @@ class Config():
                 dictionary[k] = loggingLevels[v]
             elif isinstance(v, str) and v.isnumeric():
                 dictionary[k] = int(v)
+            elif ',' in v:
+                dictionary[k] = v.split(',')
         return dictionary
