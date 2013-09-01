@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from core.status import Status
+from i3situation.core.status import Status
 import argparse
 import os
 import logging
