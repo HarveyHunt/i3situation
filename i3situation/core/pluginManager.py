@@ -16,12 +16,12 @@ class Thread(threading.Thread):
 
     def __init__(self, func, queue, interval):
         super().__init__(group=None, daemon=True)
-        self.running = True
         self.q = queue
         self.func = func
         self.interval = interval
 
     def run(self):
+        self.running = True
         while self.running:
             ret = self.func()
             self.q.put(ret)
@@ -29,7 +29,7 @@ class Thread(threading.Thread):
             time.sleep(self.interval)
 
     def stop(self):
-        self.mailBox.put('shutdown')
+        self.running = False
 
 
 class ThreadManager():

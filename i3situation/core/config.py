@@ -8,8 +8,8 @@ class Config():
     Provides a simplified interface to the configuration of the application.
     """
     def __init__(self):
-        folderLocations = [os.path.join(os.path.expanduser('~'), '.i3-py3-status'),
-                '/etc/i3-py3-status']
+        folderLocations = [os.path.join(os.path.expanduser('~'), '.i3situation'),
+                '/etc/i3situation']
         for path in folderLocations:
             if os.path.isdir(path):
                 self._folderPath = path
