@@ -16,5 +16,4 @@ def main():
     args = parser.parse_args()
     s = Status()
     logging.debug('Initialised Status object')
-    while True:
-        s.run()
+    s.run()

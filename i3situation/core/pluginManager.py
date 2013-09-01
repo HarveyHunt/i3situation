@@ -12,6 +12,11 @@ class MissingPlugin(Exception):
 
 
 class Thread(threading.Thread):
+    """
+    A thread that runs a plugin's main function and mutates that outputdict
+    in order to return the value of the plugin's main function. This is where
+    a plugin's interval is taken into account.
+    """
 
     def __init__(self, func, interval, outputDict):
         super().__init__(group=None, daemon=True)
@@ -20,6 +25,12 @@ class Thread(threading.Thread):
         self.interval = interval
 
     def run(self):
+        """
+        Calls the main function of a plugin and mutates the output dict
+        with its return value. Provides and easy way to change the output
+        whilst not needing to constantly poll a queue in another thread and
+        allowing plugin's to manage their own intervals.
+        """
         self.running = True
         while self.running:
             ret = self.func()
@@ -31,17 +42,32 @@ class Thread(threading.Thread):
 
 
 class ThreadManager():
+    """
+    Keeps track of threads and enables the creation and destruction of
+    threads.
+
+    The outputDict variable is a dictionary passed into the class that is then
+    mutated by the threads in order to update the output of the application.
+    This means that the main thread need only display the output and not poll
+    for changes in the output data. It also means that queues are not needed.
+    """
 
     def __init__(self, outputDict):
         self._threadPool = []
         self.outputDict = outputDict
 
     def addThread(self, func, interval):
+        """
+        Creates a thread, starts it and then adds it to the thread pool.
+        """
         t = Thread(func, interval, self.outputDict)
         t.start()
         self._threadPool.append(t)
 
     def killAllThreads(self):
+        """
+        Provides an easy way to graciously end all threads.
+        """
         for t in self._threadPool:
             t.stop()
 
