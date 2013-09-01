@@ -74,7 +74,8 @@ Options that can be configured by the user should be declared before calling the
 \_\_init\_\_ function.
 
 The super class' \_\_init\_\_ function must be passed two arguments- config and the user configurable
-options.
+options. There is only one compulsary option- interval. This refers to how often (in seconds) the
+main function of the plugin should be called.
 
 ```python
 from plugins._plugin import Plugin
@@ -85,7 +86,7 @@ __all__ = 'CoolFeaturePlugin'
 class CoolFeaturePlugin(Plugin):
 
     def __init__(self, config):
-        self.options = {'coolOption': 'coolValue'}
+        self.options = {'coolOption': 'coolValue', 'interval': 1}
         super().__init__(config, self.options)
 ```
 
@@ -104,7 +105,7 @@ __all__ = 'CoolFeaturePlugin'
 class CoolFeaturePlugin(Plugin):
 
     def __init__(self, config):
-        self.options = {'coolOption': 'coolValue'}
+        self.options = {'coolOption': 'coolValue', 'interval': 1}
         super().__init__(config, self.options)
     
     def main(self):
@@ -145,11 +146,9 @@ TODO
 =============
 
 The following need to be implemented in newer versions, the order in which they are displayed is not significant.
-- Multithreading support: This will allow plugins to have correct control over their update interval as well as 
-preventing plugins that rely on network connections from holding up the main thread.
-- Support for lists in the config parser: This needs to be implemented in order to allow users to specify a list
-for a config option- such as topics for the news plugin. I think the best way to implement this is by allowing
-the user to enter python syntax for lists and implementing a parser for this in Config._replaceDataTypes.
+~~Multithreading support.~~
+
+~~Support for lists in the config parser.~~
 - Investigate the slow updating: The i3bar updates slowly, despite i3situation passing it information at the
 correct speed.
 - Consider whether sections require a unique name: Removing the use of a unique name would make config files look
