@@ -5,6 +5,9 @@ import os
 import logging
 
 if __name__ == '__main__':
+    main()
+
+def main():
     defaultPath = os.path.join(os.path.expanduser('~'), '.i3-py3-status.conf')
     parser = argparse.ArgumentParser(description="""A replacement for i3status \
             written in pure Python 3. This application supports heavy \

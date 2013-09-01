@@ -33,7 +33,7 @@ class Status():
         logging.debug('Config loaded from {0}'.format(self._configFilePath))
         logging.debug('Plugin path is located at {0}'.format(self._pluginPath))
         logging.debug('Last config modification time is: {0}'.format(self._configModTime))
-        logging.debug('Last plugin modification time is: {0}'.format(self._pluginModTime))
+        logging.debug('Last plugin directory modification time is: {0}'.format(self._pluginModTime))
         self.outputToBar('{\"version\":1}', False)
         self.outputToBar('[', False)
         logging.debug('Sent initial JSON data to i3bar.')
