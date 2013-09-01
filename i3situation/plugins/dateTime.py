@@ -1,4 +1,4 @@
-from plugins._plugin import Plugin
+from i3situation.plugins._plugin import Plugin
 import time
 import os
 
@@ -9,7 +9,7 @@ class DateTimePlugin(Plugin):
 
     def __init__(self, config):
         self.options = {'timeZone': 'GMT', 'longFormat': '%d-%m-%Y %H:%M:%S',
-                        'shortFormat': '%H:%M:%S'}
+                        'shortFormat': '%H:%M:%S', 'interval': 1}
         super().__init__(config, self.options)
 
     def main(self):

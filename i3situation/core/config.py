@@ -1,7 +1,6 @@
 import os
 import errno
 import configparser
-import logging
 
 
 class Config():
@@ -9,8 +8,8 @@ class Config():
     Provides a simplified interface to the configuration of the application.
     """
     def __init__(self):
-        folderLocations = [os.path.join(os.path.expanduser('~'), '.i3-py3-status'),
-                '/etc/i3-py3-status']
+        folderLocations = [os.path.join(os.path.expanduser('~'), '.i3situation'),
+                '/etc/i3situation']
         for path in folderLocations:
             if os.path.isdir(path):
                 self._folderPath = path
@@ -51,7 +50,6 @@ class Config():
             pluginSettings.append(dict(self._conf.items(section)))
             pluginSettings[index].update({'name': section})
             pluginSettings[-1] = self._replaceDataTypes(pluginSettings[-1])
-        logging.debug('Test')
         return (pluginSettings, general)
 
     def _replaceDataTypes(self, dictionary):
@@ -66,8 +64,12 @@ class Config():
                 dictionary[k] = True
             elif v in ['false', 'False', 'off']:
                 dictionary[k] = False
+            elif k == 'logFile' and '~' in v:
+                dictionary[k] = v.replace('~', os.path.expanduser('~'))
             elif v in loggingLevels:
                 dictionary[k] = loggingLevels[v]
             elif isinstance(v, str) and v.isnumeric():
                 dictionary[k] = int(v)
+            elif ',' in v:
+                dictionary[k] = v.split(',')
         return dictionary

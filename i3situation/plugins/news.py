@@ -1,4 +1,4 @@
-from plugins._plugin import Plugin
+from i3situation.plugins._plugin import Plugin
 import time
 import json
 import math
@@ -16,7 +16,7 @@ class NewsPlugin(Plugin):
     """
 
     def __init__(self, config):
-        self.options = {'topics': ['uk'], 'displayTime': 300}
+        self.options = {'topics': ['uk', 'technology'], 'interval': 2}
         super().__init__(config, self.options)
 
     def main(self):

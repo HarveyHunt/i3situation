@@ -1,10 +1,13 @@
 #!/usr/bin/python3
-from core.status import Status
+from i3situation.core.status import Status
 import argparse
 import os
 import logging
 
 if __name__ == '__main__':
+    main()
+
+def main():
     defaultPath = os.path.join(os.path.expanduser('~'), '.i3-py3-status.conf')
     parser = argparse.ArgumentParser(description="""A replacement for i3status \
             written in pure Python 3. This application supports heavy \
@@ -12,5 +15,5 @@ if __name__ == '__main__':
             Harvey Hunt <harveyhuntnexus@gmail.com>""")
     args = parser.parse_args()
     s = Status()
-    while True:
-        s.run()
+    logging.debug('Initialised Status object')
+    s.run()
