@@ -174,9 +174,10 @@ are displayed is not significant.
 ~~Multithreading support.~~
 
 ~~Support for lists in the config parser.~~
-- Investigate the slow updating: The i3bar updates slowly, despite i3situation
-  passing it information at the
-correct speed.
+
+~~Investigate the slow updating: The i3bar updates slowly, despite i3situation
+  passing it information at the correct speed.~~
+
 - Create more documentation: More documentation needs to be created in regards
   to plugin development and installation.
 

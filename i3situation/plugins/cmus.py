@@ -8,6 +8,35 @@ __all__ = 'CmusPlugin'
 class CmusPlugin(Plugin):
 
     def __init__(self, config):
+        """
+        Possible format options are:
+
+        status
+        file
+        duration
+        position
+        artist
+        album
+        title
+        date
+        genre
+        tracknumber
+        comment
+        replaygain_track_gain
+        aaa_mode
+        continue
+        play_library
+        play_sorted
+        replaygain
+        replaygain_limit
+        replaygain_preamp
+        repeat
+        repeat_current
+        shuffle
+        softvol
+        vol_left
+        vol_right
+        """
         self.options = {'color': '#FFFFFF', 'interval': 1, 'format':
                 'artist - album - position/duration'}
         super().__init__(config, self.options)
@@ -15,6 +44,11 @@ class CmusPlugin(Plugin):
         self._outputOptions['color'] = self.options['color']
 
     def main(self):
+        """
+        A compulsary function that gets the output of the cmus-remote -Q command
+        and converts it to unicode in order for it to be processed and finally
+        output.
+        """
         cmusOutput = check_output(['cmus-remote', '-Q']).decode('utf-8')
         status = self.convertCmusOutput(cmusOutput)
         outString = self.options['format']
@@ -23,6 +57,11 @@ class CmusPlugin(Plugin):
         return self.output(outString, outString)
 
     def convertCmusOutput(self, cmusOutput):
+        """
+        Change the newline separated string of output data into
+        a dictionary which can then be used to replace the strings in the config
+        format.
+        """
         cmusOutput = cmusOutput.split('\n')
         cmusOutput = [x.replace('tag ', '') for x in cmusOutput if not x in '']
         cmusOutput = [x.replace('set ', '') for x in cmusOutput]
@@ -34,6 +73,10 @@ class CmusPlugin(Plugin):
         return status
 
     def convertTime(self, time):
+        """
+        A helper function to convert seconds into hh:mm:ss for better
+        readability.
+        """
         timeString = str(datetime.timedelta(seconds=int(time)))
         if timeString.split(':')[0] == '0':
             timeString = timeString.partition(':')[2]

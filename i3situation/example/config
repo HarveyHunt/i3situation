@@ -1,9 +1,0 @@
-[general]
-interval = 1
-loggingLevel = DEBUG
-logFile = ~/.i3situation/log.txt
-colors = true
-
-[time]
-plugin = dateTime
-color = #FF00FF
