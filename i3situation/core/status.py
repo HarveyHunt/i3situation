@@ -50,6 +50,7 @@ class Status():
         if comma:
             message += ','
         sys.stdout.write(message + '\n')
+        sys.stdout.flush()
 
     def reload(self):
         """
