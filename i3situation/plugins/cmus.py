@@ -1,4 +1,4 @@
-from subprocess import check_output
+import subprocess
 import datetime
 from i3situation.plugins._plugin import Plugin
 
@@ -49,7 +49,13 @@ class CmusPlugin(Plugin):
         and converts it to unicode in order for it to be processed and finally
         output.
         """
-        cmusOutput = check_output(['cmus-remote', '-Q']).decode('utf-8')
+        try:
+            # Setting stderr to subprocess.STDOUT seems to stop the error
+            # message returned by the process from being output to STDOUT.
+            cmusOutput = subprocess.check_output(['cmus-remote', '-Q'],
+                                    stderr=subprocess.STDOUT).decode('utf-8')
+        except subprocess.CalledProcessError:
+            return self.output('Cmus is not running', 'Cmus is not running')
         status = self.convertCmusOutput(cmusOutput)
         outString = self.options['format']
         for k, v in status.items():
