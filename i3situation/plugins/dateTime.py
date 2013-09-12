@@ -1,6 +1,6 @@
-from i3situation.plugins._plugin import Plugin
 import time
 import os
+from i3situation.plugins._plugin import Plugin
 
 __all__ = 'DateTimePlugin'
 
