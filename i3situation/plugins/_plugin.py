@@ -14,15 +14,13 @@ class Plugin():
             'seperator': None,
             'seperator_block_width': None}
         # Replace default values with user defined ones.
-        for k, v in config.items():
-            self.options[k] = v
-            if k in self._outputOptions.keys():
-                self._outputOptions[k] = v
+        self.options.update(config)
+        self._outputOptions.update(config)
 
     def output(self, fullText, shortText):
         """
         Output all of the options and data for a segment.
         """
         self._outputOptions.update({'full_text': fullText, 'short_text': shortText})
-        self._outputOptions = {k: v for k, v in self._outputOptions.items() if v is not None}
+        self._outputOptions = {k: v for k, v in self._outputOptions.items() if v}
         return self._outputOptions

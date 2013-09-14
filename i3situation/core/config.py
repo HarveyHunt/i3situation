@@ -20,8 +20,8 @@ class Config():
         self.pluginPath = os.path.join(self._folderPath, 'plugins')
         self._touchDir(self.pluginPath)
         self.configPath = os.path.join(self._folderPath, 'config')
-        if not os.path.isfile(self.configPath):
-            open(self.configPath, 'w').close()
+        # Auto open the config file- creating it is necessary.
+        open(self.configPath, 'a').close()
         self.pluginSettings, self.generalSettings = self.reload()
 
     def _touchDir(self, path):
@@ -46,9 +46,9 @@ class Config():
         general = self._replaceDataTypes(dict(self._conf.items('general')))
         self._conf.remove_section('general')
         pluginSettings = []
-        for index, section in enumerate(self._conf.sections()):
+        for section in self._conf.sections():
             pluginSettings.append(dict(self._conf.items(section)))
-            pluginSettings[index].update({'name': section})
+            pluginSettings[-1].update({'name': section})
             pluginSettings[-1] = self._replaceDataTypes(pluginSettings[-1])
         return (pluginSettings, general)
 

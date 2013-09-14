@@ -99,6 +99,7 @@ class PluginLoader():
                 compileall.compile_dir(self.dirPath, quiet=True)
                 logging.debug('Compiled plugins as a new plugin has been added.')
                 return
+            # Recompile if there are newer plugins.
             elif os.getmtime(os.path.join(self.dirPath, f)) > os.getmtime(
                 os.path.join(self.dirPath, f + 'c')):
                 compileall.compile_dir(self.dirPath, quiet=True)

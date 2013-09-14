@@ -1,4 +1,5 @@
 import sys
+from collections import OrderedDict
 import logging
 import time
 import json
@@ -14,7 +15,7 @@ class Status():
     """
     def __init__(self):
         self.config = config.Config()
-        self.outputDict = {}
+        self.outputDict = OrderedDict()
         self._configFilePath = self.config.configPath
         self._pluginPath = self.config.pluginPath
         self._configModTime = os.path.getmtime(self._configFilePath)
@@ -70,6 +71,9 @@ class Status():
         Creates a thread for each plugin and lets the ThreadManager handle it.
         """
         for obj in self.loader.objects:
+            # Reserve a slot in the outputDict in order to ensure that the
+            # items are in the correct order.
+            self.outputDict[obj._outputOptions['name']] = None
             self.threadManager.addThread(obj.main, obj.options['interval'])
 
     def run(self):
