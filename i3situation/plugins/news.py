@@ -16,7 +16,7 @@ class NewsPlugin(Plugin):
     """
 
     def __init__(self, config):
-        self.options = {'topics': ['uk', 'technology'], 'interval': 2}
+        self.options = {'topics': ['uk', 'technology'], 'interval': 30}
         super().__init__(config, self.options)
 
     def main(self):
@@ -27,20 +27,18 @@ class NewsPlugin(Plugin):
         if not hasattr(self, 'news'):
             self.news = self.getNews()
         self.article = self.getRandomArticle(self.news)
-        if round(time.time()) % 1 == 0:
-            self.article = self.getRandomArticle(self.news)
         if self.getNumberofArticles() == 1:
             self.news = self.getNews()
         return self.output(self.article['description'] + '   ' + self.getAge(
             self.article['published']), self.article['title'] + '   ' +
             self.getAge(self.article['published']))
 
-    def getAge(self, pubTime):
+    def getAge(self, publishedTime):
         """
         Converts the published time (relevant to the epoch) into a human readable
         format.
         """
-        minutes = math.floor((time.time() - pubTime) / 60)
+        minutes = math.floor((time.time() - publishedTime) / 60)
         if minutes > 1439:
             days = math.floor(minutes / 1440)
             if days > 1:
@@ -71,9 +69,9 @@ class NewsPlugin(Plugin):
                 # Remove thumbnail information, audio and video stories.
                 jsonObj['stories'] = [x for x in jsonObj['stories'] if not 'VIDEO'
                                     in x['title'] and not 'AUDIO' in x['title']]
-                for index, story in enumerate(jsonObj['stories']):
-                    del jsonObj['stories'][index]['thumbnail']
-                    del jsonObj['stories'][index]['link']
+                # Remove thumbnails and links.
+                jsonObj['stories'] = [dict({(k, v) for (k, v) in x.items() if k
+                    not in ['thumbnail', 'link']}) for x in jsonObj['stories']]
                 # Rearrange the dictionary to allow multiple topics to coexist.
                 news[jsonObj['topic']['title']] = jsonObj['stories']
             except URLError as e:
