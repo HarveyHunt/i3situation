@@ -36,6 +36,7 @@ class Thread(threading.Thread):
             ret = self.func()
             self.outputDict[ret['name']] = ret
             time.sleep(self.interval)
+        return
 
     def stop(self):
         self.running = False
@@ -70,6 +71,7 @@ class ThreadManager():
         """
         for t in self._threadPool:
             t.stop()
+        self._threadPool = []
 
 
 class PluginLoader():

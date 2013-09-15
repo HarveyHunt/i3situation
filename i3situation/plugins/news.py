@@ -16,7 +16,7 @@ class NewsPlugin(Plugin):
     """
 
     def __init__(self, config):
-        self.options = {'topics': ['uk', 'technology'], 'interval': 30}
+        self.options = {'topics': ['uk', 'technology'], 'interval': 30, 'format': 'news time '}
         super().__init__(config, self.options)
 
     def main(self):
@@ -29,9 +29,10 @@ class NewsPlugin(Plugin):
         self.article = self.getRandomArticle(self.news)
         if self.getNumberofArticles() == 1:
             self.news = self.getNews()
-        return self.output(self.article['description'] + '   ' + self.getAge(
-            self.article['published']), self.article['title'] + '   ' +
-            self.getAge(self.article['published']))
+        outputText = self.options['format'].replace('time', self.getAge(self.article['published']))
+        longOutput = outputText.replace('news', self.article['description'])
+        shortOutput = outputText.replace('news', self.article['title'])
+        return self.output(longOutput, shortOutput)
 
     def getAge(self, publishedTime):
         """
