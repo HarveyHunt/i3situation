@@ -34,6 +34,9 @@ configuration to:
     
 Configuring Plugins
 =============
+Plugins are the way to get this application to output to i3bar and allow for large
+amounts of expandability. The configuration file is automatically reloaded when
+any changes occur to it.
 
 Plugins are configured in the config file. You must first denote a new plugin
 config section by using a unique name for that instance of a plugin. For example:
