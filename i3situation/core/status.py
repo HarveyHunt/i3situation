@@ -86,8 +86,9 @@ class Status():
             # Reload plugins and config if either the config file or plugin
             # directory are modified.
             if self._configModTime != os.path.getmtime(self._configFilePath) or \
-            self._pluginModTime != os.path.getmtime(self._pluginPath):
+                    self._pluginModTime != os.path.getmtime(self._pluginPath):
                 self.threadManager.killAllThreads()
+                self.outputDict.clear()
                 self.reload()
                 self.runPlugins()
             self.outputToBar(json.dumps(list(self.outputDict.values())))
