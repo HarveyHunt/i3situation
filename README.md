@@ -32,6 +32,72 @@ configuration to:
 
     status_command i3situation
     
+Configuring Plugins
+=============
+
+Plugins are configured in the config file. You must first denote a new plugin
+config section by using a unique name for that instance of a plugin. For example:
+
+    [myNewsPlugin]
+
+Inside this section you need to say which plugin you wish to use (Note: the plugin
+field refers to the filename of the plugin less the .py extension).
+
+    [myNewsPlugin]
+    plugin = news
+    
+You can then change the options for a plugin by defining them next. The available
+options can be seen in the plugin file in a dictionary- with the defaults next to it.
+
+A list of values should be comma separated and a boolean value can be written as:
+
+- on
+- True
+- true
+- off
+- False
+- false
+
+The example below illustrates using a comma separated list:
+
+    [myNewsPlugin]
+    plugin = news
+    topics = uk,technology
+    
+You can also edit options that affect how the output is displayed (Note: the
+same options are available for all plugins). The following example illustrates
+changing the colour of the output:
+
+    [myNewsPlugin]
+    plugin = news
+    topics = uk,technology
+    color = #808080
+
+The rest of the output options that can be edited are discussed in the Advanced Plugin 
+Options section of this document.
+
+Below is an example of my i3situation config that I have been using since the start
+of this project:
+
+    [general]
+    interval = 1
+    loggingLevel = ERROR
+    logFile = ~/.i3situation/log.txt
+    colors = true
+     
+    [news]
+    plugin = news
+    color = #808080
+     
+    [cmus]
+    plugin = cmus
+    color = #808080
+    format = ❴artist - title - position/duration❵
+     
+    [time]
+    plugin = dateTime
+    color = #808080
+
 Creating a Plugin
 =============
 
@@ -165,19 +231,3 @@ For a full explanation of each output option, please refer to section 2.2 of
 the excellent 
 i3bar documentation:
 [i3Bar Protocol](http://i3wm.org/docs/i3bar-protocol.html)
-TODO
-=============
-
-The following need to be implemented in newer versions, the order in which they
-are displayed is not significant.
-
-~~Multithreading support.~~
-
-~~Support for lists in the config parser.~~
-
-~~Investigate the slow updating: The i3bar updates slowly, despite i3situation
-  passing it information at the correct speed.~~
-
-- Create more documentation: More documentation needs to be created in regards
-  to plugin development and installation.
-
