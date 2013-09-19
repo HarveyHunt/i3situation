@@ -1,0 +1,113 @@
+import html.parser
+import requests
+from i3situation.plugins._plugin import Plugin
+
+__all__ = 'RedditPlugin'
+
+
+class RedditPlugin(Plugin):
+    """
+    A plugin to display data from Reddit. The submissions on the front page can
+    be displayed as well as the submissions on selected subreddits. The format
+    options can contain the following keywords that will be replace at run time:
+
+    link_flair_css_class
+    approved_by
+    num_reports
+    num_comments
+    author_flair_css_class
+    link_flair_text
+    ups
+    author_flair_text
+    permalink
+    selftext
+    domain
+    subreddit_id
+    over_18
+    secure_media
+    name
+    media
+    clicked
+    score
+    is_self
+    stickied
+    distinguished
+    media_embed
+    subreddit
+    edited
+    selftext_html
+    banned_by
+    likes
+    created_utc
+    hidden
+    url
+    id
+    downs
+    thumbnail
+    author
+    secure_media_embed
+    title
+    saved
+    """
+
+    def __init__(self, config):
+        self.options = {'mode': 'front', 'color': '#FFFFFF', 'interval': 30,
+                        'subreddits': ['vim', 'python'], 'username': None,
+                        'password': None, 'limit': 25, 'format': '❴subreddit❵ title ↑ups',
+                        'sort': 'hot'}
+        super().__init__(config)
+        self.h = html.parser.HTMLParser()
+        self.client = requests.session()
+        self.client.headers.update({'user-agent': 'i3situation reddit plugin'})
+
+    def main(self):
+        """
+        Generates an output string by replacing the keywords in the format
+        string with the corresponding values from a submission dictionary.
+        """
+        self.manageSubmissions()
+        outString = self.options['format']
+        for k, v in self.submissions.pop().items():
+            outString = outString.replace(k, str(v))
+        return self.output(outString, outString)
+
+    def login(self):
+        """
+        Logs into Reddit in order to display a personalised front page.
+        """
+        data = {'user': self.options['username'], 'passwd':
+                self.options['password'], 'api_type': 'json'}
+        response = self.client.post('http://www.reddit.com/api/login', data=data)
+        self.client.modhash = response.json()['json']['data']['modhash']
+
+    def manageSubmissions(self):
+        """
+        If there are no or only one submissions left, get new submissions.
+        This function manages URL creation and the specifics for front page
+        or subreddit mode.
+        """
+        if not hasattr(self, 'submissions') or len(self.submissions) == 1:
+            self.submissions = []
+            if self.options['mode'] == 'front':
+                # If there are no login details, the standard front
+                # page will be displayed.
+                if self.options['password'] and self.options['username']:
+                    self.login()
+                url = 'http://reddit.com/.json?sort={0}'.format(self.options['sort'])
+                self.submissions = self.getSubmissions(url)
+            elif self.options['mode'] == 'subreddit':
+                for subreddit in self.options['subreddits']:
+                    url = 'http://reddit.com/r/{0}/.json?sort={1}'.format(
+                        subreddit, self.options['limit'])
+                    self.submissions += self.getSubmissions(url)
+        else:
+            return
+
+    def getSubmissions(self, url):
+        """
+        Connects to Reddit and gets a JSON representation of submissions.
+        This JSON data is then processed and returned.
+        """
+        response = self.client.get(url, params={'limit': self.options['limit']})
+        submissions = [x['data'] for x in response.json()['data']['children']]
+        return submissions

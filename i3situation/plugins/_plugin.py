@@ -4,7 +4,7 @@ class Plugin():
     It handles defaults, replacing options and managing lower level
     settings that a plugin developer need not bother with.
     """
-    def __init__(self, config, defaults):
+    def __init__(self, config):
         self._outputOptions = {
             'color': None,
             'min_width': None,
@@ -15,7 +15,9 @@ class Plugin():
             'seperator_block_width': None}
         # Replace default values with user defined ones.
         self.options.update(config)
-        self._outputOptions.update(config)
+        # Allow output options to be overwritten by the user.
+        self._outputOptions.update((k, v) for k, v in config.items() if k in
+                                   self._outputOptions)
 
     def output(self, fullText, shortText):
         """

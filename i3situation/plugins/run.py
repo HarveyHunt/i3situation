@@ -12,10 +12,8 @@ class RunPlugin(Plugin):
 
     def __init__(self, config):
         self.options = {'command': 'echo No command', 'text': '',
-                        'color': '#FFFFFF', 'interval': 1}
-        super().__init__(config, self.options)
-        # A sad americanism.
-        self._outputOptions['color'] = self.options['color']
+                        'interval': 1}
+        super().__init__(config)
 
     def main(self):
 

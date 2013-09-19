@@ -37,11 +37,9 @@ class CmusPlugin(Plugin):
         vol_left
         vol_right
         """
-        self.options = {'color': '#FFFFFF', 'interval': 1, 'format':
+        self.options = {'interval': 1, 'format':
                 'artist - album - position/duration'}
-        super().__init__(config, self.options)
-        # A sad americanism.
-        self._outputOptions['color'] = self.options['color']
+        super().__init__(config)
 
     def main(self):
         """
@@ -72,8 +70,8 @@ class CmusPlugin(Plugin):
         cmusOutput = [x.replace('tag ', '') for x in cmusOutput if not x in '']
         cmusOutput = [x.replace('set ', '') for x in cmusOutput]
         status = {}
-        for item in cmusOutput:
-            status[item.partition(' ')[0]] = item.partition(' ')[2]
+        partitioned = (item.partition(' ') for item in cmusOutput)
+        status = {item[0]: item[2] for item in partitioned}
         status['duration'] = self.convertTime(status['duration'])
         status['position'] = self.convertTime(status['position'])
         return status

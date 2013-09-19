@@ -17,7 +17,7 @@ class NewsPlugin(Plugin):
 
     def __init__(self, config):
         self.options = {'topics': ['uk', 'technology'], 'interval': 30, 'format': 'news time '}
-        super().__init__(config, self.options)
+        super().__init__(config)
 
     def main(self):
         """
