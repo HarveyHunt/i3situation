@@ -1,4 +1,7 @@
 import sys
+import glob
+import threading
+import select
 from collections import OrderedDict
 import logging
 import time
@@ -36,13 +39,17 @@ class Status():
         logging.debug('Plugin path is located at {0}'.format(self._pluginPath))
         logging.debug('Last config modification time is: {0}'.format(self._configModTime))
         logging.debug('Last plugin directory modification time is: {0}'.format(self._pluginModTime))
-        self.outputToBar('{\"version\":1}', False)
+        self.outputToBar(json.dumps({'version': 1, 'click_events': True}), False)
         self.outputToBar('[', False)
         logging.debug('Sent initial JSON data to i3bar.')
         logging.debug('Beginning plugin loading process')
         self.loader = pluginManager.PluginLoader(
             self._pluginPath, self.config.pluginSettings)
         self.threadManager = pluginManager.ThreadManager(self.outputDict)
+        # Event handling is done in another thread, so that the main thread
+        # isn't stalled.
+        self.eventThread = threading.Thread(target=self.handleEvents)
+        self.eventThread.start()
 
     def outputToBar(self, message, comma=True):
         """
@@ -94,3 +101,17 @@ class Status():
             self.outputToBar(json.dumps(list(self.outputDict.values())))
             logging.debug('Output to bar')
             time.sleep(self.config.generalSettings['interval'])
+
+    def handleEvents(self):
+        """
+        An event handler that processes events from stdin and calls the onClick
+        function of the respective object. This function is run in another
+        thread, so as to not stall the main thread.
+        """
+        for event in sys.stdin:
+            if event.startswith('['):
+                continue
+            name = json.loads(event.lstrip(','))['name']
+            for obj in self.loader.objects:
+                if obj._outputOptions['name'] == name:
+                    obj.onClick(json.loads(event.lstrip(',')))

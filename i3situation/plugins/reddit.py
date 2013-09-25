@@ -1,4 +1,5 @@
 import html.parser
+import webbrowser
 import requests
 from i3situation.plugins._plugin import Plugin
 
@@ -67,9 +68,13 @@ class RedditPlugin(Plugin):
         """
         self.manageSubmissions()
         outString = self.options['format']
-        for k, v in self.submissions.pop().items():
+        self.selectedSubmission = self.submissions.pop()
+        for k, v in self.selectedSubmission.items():
             outString = outString.replace(k, str(v))
         return self.output(outString, outString)
+
+    def onClick(self, event):
+        webbrowser.open(self.selectedSubmission['url'])
 
     def login(self):
         """

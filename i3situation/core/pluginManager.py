@@ -27,7 +27,7 @@ class Thread(threading.Thread):
     def run(self):
         """
         Calls the main function of a plugin and mutates the output dict
-        with its return value. Provides and easy way to change the output
+        with its return value. Provides an easy way to change the output
         whilst not needing to constantly poll a queue in another thread and
         allowing plugin's to manage their own intervals.
         """
