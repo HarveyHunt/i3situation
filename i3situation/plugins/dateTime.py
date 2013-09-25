@@ -10,7 +10,7 @@ class DateTimePlugin(Plugin):
     def __init__(self, config):
         self.options = {'timeZone': 'GMT', 'longFormat': '%d-%m-%Y %H:%M:%S',
                         'shortFormat': '%H:%M:%S', 'interval': 1}
-        super().__init__(config, self.options)
+        super().__init__(config)
 
     def main(self):
         cur = time.time()
