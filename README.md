@@ -24,7 +24,7 @@ follows:
 
     [general]
     interval = 1
-    loggingLevel = DEBUG
+    loggingLevel = ERROR
     logFile = ~/.i3situation/log.txt
   
 You then need to change the status_command value in the bar section of your i3
@@ -36,7 +36,8 @@ Configuring Plugins
 =============
 Plugins are the way to get this application to output to i3bar and allow for large
 amounts of expandability. The configuration file is automatically reloaded when
-any changes occur to it.
+any changes occur to it. Changing the content of a plugin file will also cause
+a reload of all plugins and settings.
 
 Plugins are configured in the config file. You must first denote a new plugin
 config section by using a unique name for that instance of a plugin. For example:
@@ -100,6 +101,26 @@ of this project:
     [time]
     plugin = dateTime
     color = #808080
+    
+Plugins
+============
+
+* [News](#news)
+* [Cmus](#cmus)
+* [Date and Time](#date and time)
+* [Reddit](#reddit)
+* [Run](#run)
+* [Text](#text)
+
+## News
+The news plugin displays news from the BBC website.
+
+Options:
+* **Topics**: A comma seperated list of topics that shall be displayed.
+(A full list of topics can be found [here](http://api.bbcnews.appengine.co.uk/topics))
+* **Interval**: How often the story is changed.
+* **Format**: A string showing the format in which the output should be displayed.
+ Keywords in the string will be replace with data. Possible keywords are time and news.
 
 Creating a Plugin
 =============
