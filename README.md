@@ -50,6 +50,13 @@ field refers to the filename of the plugin less the .py extension).
     [myNewsPlugin]
     plugin = news
     
+Each plugin needs to have an interval set. This interval refers to how often the
+plugin's displayed text is updated.
+
+    [myNewsPlugin]
+    plugin = news
+    interval = 30
+    
 You can then change the options for a plugin by defining them next. The available
 options can be seen in the plugin file in a dictionary- with the defaults next to it.
 
@@ -66,6 +73,7 @@ The example below illustrates using a comma separated list:
 
     [myNewsPlugin]
     plugin = news
+    interval = 30
     topics = uk,technology
     
 You can also edit options that affect how the output is displayed (Note: the
@@ -74,6 +82,7 @@ changing the colour of the output:
 
     [myNewsPlugin]
     plugin = news
+    interval = 30
     topics = uk,technology
     color = #808080
 
@@ -91,15 +100,18 @@ of this project:
      
     [news]
     plugin = news
+    interval = 30
     color = #808080
      
     [cmus]
     plugin = cmus
+    interval = 1
     color = #808080
     format = ❴artist - title - position/duration❵
      
     [time]
-    plugin = dateTime
+    plugin= dateTime
+    interval = 1
     color = #808080
     
 Plugins
@@ -118,9 +130,51 @@ The news plugin displays news from the BBC website.
 Options:
 * **Topics**: A comma seperated list of topics that shall be displayed.
 (A full list of topics can be found [here](http://api.bbcnews.appengine.co.uk/topics))
-* **Interval**: How often the story is changed.
+
+```
+topics=uk,technology
+```
+
 * **Format**: A string showing the format in which the output should be displayed.
  Keywords in the string will be replace with data. Possible keywords are time and news.
+
+```
+format=news @ time
+```
+
+## Cmus
+A plugin to display information provided by Cmus (current song etc).
+
+Options:
+* **Format**: A string showing the format in which the output should be displayed.
+ Keywords in the string will be replaced with data. Possible keywords can be found [here](i3situation/plugins/cmus.py).
+
+```
+format=artist -> title
+```
+
+## Date and Time
+A plugin to display the current date and time. Has support for multiple time zones.
+
+Options:
+* **Time Zone**: The time zone that should be used when finding the time.
+
+```
+timeZone=GMT
+```
+
+* **Long Format**: The text to display when there is a large amount of space. A full list of 
+format options can be found [here](http://docs.python.org/3/library/time.html#time.strftime)
+
+```
+longFormat=%d-%m-%Y %H:%M:%S
+```
+
+* **Short Format**: The text to be displayed when there is a smaller amount of bar space available.
+
+```
+shortFormat=%H:%M:%S
+```
 
 Creating a Plugin
 =============
