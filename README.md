@@ -13,7 +13,7 @@ cloned and that you're in the folder that it was cloned into.
 
     sudo python setup.py install
     mkdir ~/.i3situation
-    cp -r plugins/ ~/.i3situation/
+    cp -r i3situation/plugins/ ~/.i3situation/
     
 Next, use your editor of choice to create a configuration file.
 
