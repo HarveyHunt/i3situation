@@ -92,7 +92,7 @@ class PluginLoader():
     def _compileFiles(self):
         """
         Compiles python plugin files in order to be processed by the loader.
-        It compiled the plugins if they have been update or haven't yet been
+        It compiles the plugins if they have been updated or haven't yet been
         compiled.
         """
         for f in glob.glob(os.path.join(self.dirPath, '*.py')):

@@ -1,10 +1,11 @@
-from i3situation.plugins._plugin import Plugin
+import webbrowser
 import time
 import json
 import math
 import random
 from urllib.request import urlopen
 from urllib.error import URLError
+from i3situation.plugins._plugin import Plugin
 
 __all__ = 'NewsPlugin'
 
@@ -33,6 +34,9 @@ class NewsPlugin(Plugin):
         longOutput = outputText.replace('news', self.article['description'])
         shortOutput = outputText.replace('news', self.article['title'])
         return self.output(longOutput, shortOutput)
+
+    def onClick(self, event):
+        webbrowser.open(self.article['link'])
 
     def getAge(self, publishedTime):
         """
@@ -67,16 +71,16 @@ class NewsPlugin(Plugin):
             try:
                 response = urlopen('http://api.bbcnews.appengine.co.uk/stories/{0}'.format(topic))
                 jsonObj = json.loads(response.read().decode())
-                # Remove thumbnail information, audio and video stories.
+                # Remove audio and video stories.
                 jsonObj['stories'] = [x for x in jsonObj['stories'] if not 'VIDEO'
                                     in x['title'] and not 'AUDIO' in x['title']]
-                # Remove thumbnails and links.
+                # Remove thumbnails
                 jsonObj['stories'] = [dict({(k, v) for (k, v) in x.items() if k
-                    not in ['thumbnail', 'link']}) for x in jsonObj['stories']]
+                    not in 'thumbnail'}) for x in jsonObj['stories']]
                 # Rearrange the dictionary to allow multiple topics to coexist.
                 news[jsonObj['topic']['title']] = jsonObj['stories']
             except URLError as e:
-                print('Broken: {0}'.format(e))
+                logging.exception(e)
         return news
 
     def getNumberofArticles(self):

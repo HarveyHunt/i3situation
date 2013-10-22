@@ -27,14 +27,17 @@ class Status():
         # If a stream handler has been attached, remove it.
         if logger.handlers:
             logger.removeHandler(logger.handlers[0])
-        handler = logging.FileHandler(self.config.generalSettings['logFile'])
+        handler = logging.FileHandler(self.config.general['logFile'])
         logger.addHandler(handler)
         formatter = logging.Formatter(('[%(asctime)s] - %(levelname)s'
            ' - %(filename)s - %(funcName)s - %(message)s'),
            '%d/%m/%Y %I:%M:%S %p')
         handler.setFormatter(formatter)
-        logger.setLevel(self.config.generalSettings['loggingLevel'])
-        handler.setLevel(self.config.generalSettings['loggingLevel'])
+        # Redirect stderr so that it doesn't confuse i3bar by outputting to it.
+        self.logWriter = self.LoggingWriter(logger, logging.ERROR)
+        sys.stderr = self.logWriter
+        logger.setLevel(self.config.general['loggingLevel'])
+        handler.setLevel(self.config.general['loggingLevel'])
         logging.debug('Config loaded from {0}'.format(self._configFilePath))
         logging.debug('Plugin path is located at {0}'.format(self._pluginPath))
         logging.debug('Last config modification time is: {0}'.format(self._configModTime))
@@ -44,7 +47,7 @@ class Status():
         logging.debug('Sent initial JSON data to i3bar.')
         logging.debug('Beginning plugin loading process')
         self.loader = pluginManager.PluginLoader(
-            self._pluginPath, self.config.pluginSettings)
+            self._pluginPath, self.config.plugin)
         self.threadManager = pluginManager.ThreadManager(self.outputDict)
         # Event handling is done in another thread, so that the main thread
         # isn't stalled.
@@ -66,10 +69,10 @@ class Status():
         when either the plugins or config get updated.
         """
         logging.debug('Reloading config file as files have been modified.')
-        self.config.pluginSettings, self.config.generalSettings = self.config.reload()
+        self.config.plugin, self.config.general = self.config.reload()
         logging.debug('Reloading plugins as files have been modified.')
         self.loader = pluginManager.PluginLoader(
-            self._pluginPath, self.config.pluginSettings)
+            self._pluginPath, self.config.plugin)
         self._pluginModTime = os.path.getmtime(self._pluginPath)
         self._configModTime = os.path.getmtime(self._configFilePath)
 
@@ -100,7 +103,7 @@ class Status():
                 self.runPlugins()
             self.outputToBar(json.dumps(list(self.outputDict.values())))
             logging.debug('Output to bar')
-            time.sleep(self.config.generalSettings['interval'])
+            time.sleep(self.config.general['interval'])
 
     def handleEvents(self):
         """
@@ -115,3 +118,16 @@ class Status():
             for obj in self.loader.objects:
                 if obj._outputOptions['name'] == name:
                     obj.onClick(json.loads(event.lstrip(',')))
+
+    class LoggingWriter():
+        """
+        A simple class that provides a file like interface to the logging
+        utility. Allows stderr to be redirected to logging.
+        """
+        def __init__(self, logger, level):
+            self.logger = logger
+            self.level = level
+
+        def write(self, message):
+            if message != '\n':
+                self.logger.log(self.level, message)

@@ -38,7 +38,7 @@ class CmusPlugin(Plugin):
         vol_right
         """
         self.options = {'interval': 1, 'format':
-                'artist - album - position/duration'}
+                'artist - title - position/duration'}
         super().__init__(config)
 
     def main(self):
