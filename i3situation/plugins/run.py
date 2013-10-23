@@ -11,7 +11,7 @@ class RunPlugin(Plugin):
     """
 
     def __init__(self, config):
-        self.options = {'command': 'echo No command', 'text': '',
+        self.options = {'command': 'echo No command', 
                         'interval': 1}
         super().__init__(config)
 

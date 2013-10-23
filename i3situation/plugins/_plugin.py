@@ -26,3 +26,10 @@ class Plugin():
         self._outputOptions.update({'full_text': fullText, 'short_text': shortText})
         self._outputOptions = {k: v for k, v in self._outputOptions.items() if v}
         return self._outputOptions
+
+    def onClick(self, event):
+        """
+        A function that should be overwritten by a plugin that wishes to react
+        to events.
+        """
+        pass

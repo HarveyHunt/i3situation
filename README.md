@@ -4,6 +4,14 @@ i3situation
 A replacement for i3status written in Python 3 with support for huge
 customisability through plugins.
 
+Contents:
+
+* [Installation](#installation)
+* [Configuring Plugins](#configuring-plugins)
+* [Plugins](#plugins)
+* [Creating A Plugin](#creating-a-plugin)
+* [Advanced Plugin Options](#advanced-plugin-options)
+
 Installation
 =============
 
@@ -24,7 +32,7 @@ follows:
 
     [general]
     interval = 1
-    loggingLevel = DEBUG
+    loggingLevel = ERROR
     logFile = ~/.i3situation/log.txt
   
 You then need to change the status_command value in the bar section of your i3
@@ -36,7 +44,8 @@ Configuring Plugins
 =============
 Plugins are the way to get this application to output to i3bar and allow for large
 amounts of expandability. The configuration file is automatically reloaded when
-any changes occur to it.
+any changes occur to it. Changing the content of a plugin file will also cause
+a reload of all plugins and settings.
 
 Plugins are configured in the config file. You must first denote a new plugin
 config section by using a unique name for that instance of a plugin. For example:
@@ -48,6 +57,13 @@ field refers to the filename of the plugin less the .py extension).
 
     [myNewsPlugin]
     plugin = news
+    
+Each plugin needs to have an interval set. This interval refers to how often the
+plugin's displayed text is updated.
+
+    [myNewsPlugin]
+    plugin = news
+    interval = 30
     
 You can then change the options for a plugin by defining them next. The available
 options can be seen in the plugin file in a dictionary- with the defaults next to it.
@@ -65,6 +81,7 @@ The example below illustrates using a comma separated list:
 
     [myNewsPlugin]
     plugin = news
+    interval = 30
     topics = uk,technology
     
 You can also edit options that affect how the output is displayed (Note: the
@@ -73,6 +90,7 @@ changing the colour of the output:
 
     [myNewsPlugin]
     plugin = news
+    interval = 30
     topics = uk,technology
     color = #808080
 
@@ -90,16 +108,164 @@ of this project:
      
     [news]
     plugin = news
+    interval = 30
     color = #808080
      
     [cmus]
     plugin = cmus
+    interval = 1
     color = #808080
     format = ❴artist - title - position/duration❵
      
     [time]
-    plugin = dateTime
+    plugin= dateTime
+    interval = 1
     color = #808080
+    
+Plugins
+============
+
+* [News](#news)
+* [Cmus](#cmus)
+* [Date and Time](#date and time)
+* [Reddit](#reddit)
+* [Run](#run)
+* [Text](#text)
+* [Conky](#conky)
+
+## News
+The news plugin displays news from the BBC website.
+
+Options:
+* **Topics**: A comma seperated list of topics that shall be displayed.
+(A full list of topics can be found [here](http://api.bbcnews.appengine.co.uk/topics))
+
+```
+topics=uk,technology
+```
+
+* **Format**: A string showing the format in which the output should be displayed.
+ Keywords in the string will be replace with data. Possible keywords are time and news.
+
+```
+format=news @ time
+```
+
+## Cmus
+A plugin to display information provided by Cmus (current song etc).
+
+Options:
+* **Format**: A string showing the format in which the output should be displayed.
+ Keywords in the string will be replaced with data. Possible keywords can be found [here](i3situation/plugins/cmus.py).
+
+```
+format=artist -> title
+```
+
+## Date and Time
+A plugin to display the current date and time. Has support for multiple time zones.
+
+Options:
+* **Time Zone**: The time zone that should be used when finding the time.
+
+```
+timeZone=GMT
+```
+
+* **Long Format**: The text to display when there is a large amount of space. A full list of 
+format options can be found [here](http://docs.python.org/3/library/time.html#time.strftime)
+
+```
+longFormat=%d-%m-%Y %H:%M:%S
+```
+
+* **Short Format**: The text to be displayed when there is a smaller amount of bar space available.
+
+```
+shortFormat=%H:%M:%S
+```
+
+##Reddit
+A plugin that can display information from Reddit, such as post titles and upvotes.
+
+Options:
+* **Mode**: The mode that the plugin shall operate in. Front page will display threads from the 
+front page of Reddit or your personal front page (provided you have logged in).
+
+```
+mode=front
+```
+
+* **Subreddits**: The subreddits that should be displayed when the plugin is in subreddit mode. 
+Should be in the form of a comma seperated list.
+
+```
+subreddits=vim,python
+```
+
+* **Username**: Your Reddit username.
+
+```
+username=segfaultless
+```
+
+* **Password**: Your Reddit password.
+
+```
+password=lamepassword
+```
+
+* **Limit**: The amount of threads that should be requested from Reddit in one go.
+
+```
+limit=25
+```
+
+* **Format**: The format that the plugin's output should be presented in. Keywords will 
+be replaced with actual data. For a full list of keywords, look [here](i3situation/plugins/reddit.py)
+
+```
+format=subreddit title ups↑
+```
+
+* **Sort**: The method with which the Reddit threads are sorted.
+
+```
+sort=hot
+```
+
+## Run
+A plugin to run shell commands and send the output to i3bar.
+
+* **Command**: The command that is to be executed.
+
+```
+command=echo Hello
+```
+
+## Text
+A simple plugin to output text.
+
+* **Text**: The text that will be displayed.
+
+```
+text=Hello World
+```
+
+## Conky
+A plugin to allow conky's output to be displayed. It is required that you have a valid .conkyrc
+
+* **Command**: The conky command to be executed.
+
+```
+command=$uptime
+```
+
+* **Config**: The path to the conkyrc file that shall be used.
+
+```
+config=~/.conkyrc
+```
 
 Creating a Plugin
 =============
@@ -194,8 +360,54 @@ class CoolFeaturePlugin(Plugin):
         super().__init__(config, self.options)
     
     def main(self):
-        return self.output('This is an amazing and fabulous plugin', 'This is a
-great plugin')
+        return self.output('This is a fabulous plugin', 'Cool plugin')
+```
+
+It is also possible to create a function that gets executed whenever the plugin's output
+is clicked. The plugin must have an onClick() function that handles the event. The function
+must accept an event dictionary as an argument- the layout of which is below:
+
+```
+{'button': 1, 'name': 'time', 'y': 1196, 'x': 1846}
+```
+
+The button corresponds to which mouse button was used to click the text. The mouse buttons are 
+numbered as follows:
+
+1. Left Mouse Button
+2. Middle Mouse Button
+3. Right Mouse Button
+
+The x and y variables refer to the position that the text was clicked at.
+
+The name refers to the name of the plugin object that was clicked.
+
+It is possible to do many things once the text has been clicked, but please bear in mind that
+the onClick() code will be run in the same thread as the event handler. Therefore, it is important
+that any code in onClick() isn't too intensive.
+
+Adding an onClick() function to the CoolFeaturePlugin looks as follows:
+
+```python
+from plugins._plugin import Plugin
+
+__all__ = 'CoolFeaturePlugin'
+
+
+class CoolFeaturePlugin(Plugin):
+
+    def __init__(self, config):
+        self.options = {'coolOption': 'coolValue', 'interval': 1}
+        super().__init__(config, self.options)
+    
+    def main(self):
+        return self.output('This is a fabulous plugin', 'Cool plugin')
+    
+    def onClick(self, event):
+        if event[button] == 1:
+            self._outputOptions['color'] = '#FF0000'
+        else:
+            self._outputOptions['color'] = '#0000FF'
 ```
 
 This is all the code required to create a plugin. There are lots of good
