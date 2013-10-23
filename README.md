@@ -4,6 +4,14 @@ i3situation
 A replacement for i3status written in Python 3 with support for huge
 customisability through plugins.
 
+Contents:
+
+* [Installation](#installation)
+* [Configuring Plugins](#configuring-plugins)
+* [Plugins](#plugins)
+* [Creating A Plugin](#creating-a-plugin)
+* [Advanced Plugin Options](#advanced-plugin-options)
+
 Installation
 =============
 
@@ -123,6 +131,7 @@ Plugins
 * [Reddit](#reddit)
 * [Run](#run)
 * [Text](#text)
+* [Conky](#conky)
 
 ## News
 The news plugin displays news from the BBC website.
@@ -174,6 +183,88 @@ longFormat=%d-%m-%Y %H:%M:%S
 
 ```
 shortFormat=%H:%M:%S
+```
+
+##Reddit
+A plugin that can display information from Reddit, such as post titles and upvotes.
+
+Options:
+* **Mode**: The mode that the plugin shall operate in. Front page will display threads from the 
+front page of Reddit or your personal front page (provided you have logged in).
+
+```
+mode=front
+```
+
+* **Subreddits**: The subreddits that should be displayed when the plugin is in subreddit mode. 
+Should be in the form of a comma seperated list.
+
+```
+subreddits=vim,python
+```
+
+* **Username**: Your Reddit username.
+
+```
+username=segfaultless
+```
+
+* **Password**: Your Reddit password.
+
+```
+password=lamepassword
+```
+
+* **Limit**: The amount of threads that should be requested from Reddit in one go.
+
+```
+limit=25
+```
+
+* **Format**: The format that the plugin's output should be presented in. Keywords will 
+be replaced with actual data. For a full list of keywords, look [here](i3situation/plugins/reddit.py)
+
+```
+format=subreddit title ups↑
+```
+
+* **Sort**: The method with which the Reddit threads are sorted.
+
+```
+sort=hot
+```
+
+## Run
+A plugin to run shell commands and send the output to i3bar.
+
+* **Command**: The command that is to be executed.
+
+```
+command=echo Hello
+```
+
+## Text
+A simple plugin to output text.
+
+* **Text**: The text that will be displayed.
+
+```
+text=Hello World
+```
+
+## Conky
+A plugin to allow conky's output to be displayed. It is required that you have a valid .conkyrc
+
+* **Command**: The conky command to be executed.
+
+```
+command=$uptime
+```
+
+* **Config**: The path to the conkyrc file that shall be used.
+
+```
+config=~/.conkyrc
 ```
 
 Creating a Plugin
@@ -269,8 +360,54 @@ class CoolFeaturePlugin(Plugin):
         super().__init__(config, self.options)
     
     def main(self):
-        return self.output('This is an amazing and fabulous plugin', 'This is a
-great plugin')
+        return self.output('This is a fabulous plugin', 'Cool plugin')
+```
+
+It is also possible to create a function that gets executed whenever the plugin's output
+is clicked. The plugin must have an onClick() function that handles the event. The function
+must accept an event dictionary as an argument- the layout of which is below:
+
+```
+{'button': 1, 'name': 'time', 'y': 1196, 'x': 1846}
+```
+
+The button corresponds to which mouse button was used to click the text. The mouse buttons are 
+numbered as follows:
+
+1. Left Mouse Button
+2. Middle Mouse Button
+3. Right Mouse Button
+
+The x and y variables refer to the position that the text was clicked at.
+
+The name refers to the name of the plugin object that was clicked.
+
+It is possible to do many things once the text has been clicked, but please bear in mind that
+the onClick() code will be run in the same thread as the event handler. Therefore, it is important
+that any code in onClick() isn't too intensive.
+
+Adding an onClick() function to the CoolFeaturePlugin looks as follows:
+
+```python
+from plugins._plugin import Plugin
+
+__all__ = 'CoolFeaturePlugin'
+
+
+class CoolFeaturePlugin(Plugin):
+
+    def __init__(self, config):
+        self.options = {'coolOption': 'coolValue', 'interval': 1}
+        super().__init__(config, self.options)
+    
+    def main(self):
+        return self.output('This is a fabulous plugin', 'Cool plugin')
+    
+    def onClick(self, event):
+        if event[button] == 1:
+            self._outputOptions['color'] = '#FF0000'
+        else:
+            self._outputOptions['color'] = '#0000FF'
 ```
 
 This is all the code required to create a plugin. There are lots of good
