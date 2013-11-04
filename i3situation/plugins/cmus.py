@@ -54,11 +54,28 @@ class CmusPlugin(Plugin):
                                     stderr=subprocess.STDOUT).decode('utf-8')
         except subprocess.CalledProcessError:
             return self.output('Cmus is not running', 'Cmus is not running')
-        status = self.convertCmusOutput(cmusOutput)
-        outString = self.options['format']
-        for k, v in status.items():
-            outString = outString.replace(k, v)
+        if 'duration' in cmusOutput:
+            status = self.convertCmusOutput(cmusOutput)
+            outString = self.options['format']
+            for k, v in status.items():
+                outString = outString.replace(k, v)
+        else:
+            outString = 'Cmus is not playing anything'
         return self.output(outString, outString)
+
+    def onClick(self, event):
+        """
+        Handle click events.
+        Left mouse: Forward a track
+        Middle mouse: Pause/play
+        Right mouse: Back a track
+        """
+        if event['button'] == 1:
+            subprocess.call(['cmus-remote', '-n'])
+        elif event['button'] == 2:
+            subprocess.call(['cmus-remote', '-u'])
+        else:
+            subprocess.call(['cmus-remote', '-r'])
 
     def convertCmusOutput(self, cmusOutput):
         """
