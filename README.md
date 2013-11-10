@@ -404,7 +404,7 @@ class CoolFeaturePlugin(Plugin):
         return self.output('This is a fabulous plugin', 'Cool plugin')
     
     def onClick(self, event):
-        if event[button] == 1:
+        if event['button'] == 1:
             self._outputOptions['color'] = '#FF0000'
         else:
             self._outputOptions['color'] = '#0000FF'

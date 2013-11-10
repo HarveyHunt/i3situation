@@ -1,3 +1,6 @@
+import subprocess
+import json
+
 class Plugin():
     """
     A base class that should be inherited by all other plugins.
@@ -33,3 +36,28 @@ class Plugin():
         to events.
         """
         pass
+
+    def positionDzen(self, x):
+        """
+        Calculate the correct position that dzen2 should appear, so as
+        to prevent the pop up from going off the screen.
+
+        The popup will be centered on the mouse click. Both sides of the
+        monitor need to be checked to ensure that the pop up doesn't go off
+        of the screen.
+        """
+        if not '-x' in self.options['menuCommand']:
+            i3outputs = subprocess.check_output(['i3-msg', '-t', 'get_outputs'])
+            i3outputs = json.loads(i3outputs.decode('utf-8'))
+            monitorWidth = [x['rect']['width'] for x in i3outputs if x['active']][0]
+            cmd = self.options['menuCommand'].split()
+            dzenWidth = int(cmd[cmd.index('-w') + 1])
+            if x + (dzenWidth // 2) > monitorWidth:
+                return self.options['menuCommand'] + ' -x ' + str(monitorWidth - dzenWidth)
+            elif x - (dzenWidth // 2) < 0:
+                return self.options['menuCommand'] + ' -x ' + str(dzenWidth)
+            else:
+                return self.options['menuCommand'] + ' -x ' + str(x - (dzenWidth // 2))
+
+    def displayDzen(self, event):
+        subprocess.call(self.positionDzen(event['x']), shell=True)
