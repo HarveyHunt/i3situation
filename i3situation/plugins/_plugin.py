@@ -58,6 +58,12 @@ class Plugin():
                 return self.options['menuCommand'] + ' -x ' + str(dzenWidth)
             else:
                 return self.options['menuCommand'] + ' -x ' + str(x - (dzenWidth // 2))
+        else:
+            return self.options['menuCommand']
 
     def displayDzen(self, event):
+        """
+        Make a call to subprocess in order to display the dzen menu. May replace
+        the use of shell=True.
+        """
         subprocess.call(self.positionDzen(event['x']), shell=True)

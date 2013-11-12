@@ -66,16 +66,25 @@ class CmusPlugin(Plugin):
     def onClick(self, event):
         """
         Handle click events.
-        Left mouse: Forward a track
-        Middle mouse: Pause/play
-        Right mouse: Back a track
+        Left mouse: Pause/play
+        Middle mouse: Back a track/Display menu
+        Right mouse: Forward a track
         """
-        if event['button'] == 1:
-            subprocess.call(['cmus-remote', '-n'])
-        elif event['button'] == 2:
-            subprocess.call(['cmus-remote', '-u'])
+        if self.options['menuCommand'] == '':
+            if event['button'] == 1:
+                subprocess.call(['cmus-remote', '-u'])
+            elif event['button'] == 2:
+                subprocess.call(['cmus-remote', '-r'])
+            else:
+                subprocess.call(['cmus-remote', '-n'])
         else:
-            subprocess.call(['cmus-remote', '-r'])
+            if event['button'] == 1:
+                subprocess.call(['cmus-remote', '-u'])
+            elif event['button'] == 2:
+                self.displayDzen(event)
+            else:
+                subprocess.call(['cmus-remote', '-n'])
+
 
     def convertCmusOutput(self, cmusOutput):
         """
