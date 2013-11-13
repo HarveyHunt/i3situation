@@ -18,4 +18,4 @@ setup(name='i3situation',
       keywords="python3 i3situation i3 i3wm i3status i3bar json",
       install_requires=['requests'],
       long_description=read('README.md'),
-      entry_points={'console_scripts': ['i3situation=i3situation.i3situation:main']})
+      entry_points={'console_scripts': ['i3situation=i3situation.main:main']})
