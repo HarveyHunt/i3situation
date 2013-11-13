@@ -65,6 +65,22 @@ plugin's displayed text is updated.
     plugin = news
     interval = 30
     
+Many plugins also accept a menuCommand. This is a command that is executed when
+a plugin wishes to display a menu- allowing you to have extremely customisable
+menus. The command should be a dzen2 command, the options available can be seen
+[here](https://github.com/robm/dzen/wiki/_pages). As an example, here is the menu
+command that I use with the dateTime plugin:
+
+    [time]
+    plugin = dateTime
+    color = #0d132b
+    menuCommand = cal | dzen2 -y -30 -w 200 -l 7 -p -bg "#70898f" -fg "#0d132b" -e "onstart=uncollapse;button1=exit" -fn "Inconsolata-dz for Powerline 10" -ta c -sa c
+
+You can specify the x position that dzen2 appears at by using the -x command line
+argument. Alternatively, i3situation can work out the correct x position so that
+dzen2 appears central to the mouse click and aligned to always be on the screen.
+
+    
 You can then change the options for a plugin by defining them next. The available
 options can be seen in the plugin file in a dictionary- with the defaults next to it.
 
@@ -404,8 +420,39 @@ class CoolFeaturePlugin(Plugin):
         return self.output('This is a fabulous plugin', 'Cool plugin')
     
     def onClick(self, event):
-        if event[button] == 1:
+        if event['button'] == 1:
             self._outputOptions['color'] = '#FF0000'
+        else:
+            self._outputOptions['color'] = '#0000FF'
+```
+
+If you wish to allow users to display dzen menus when a click event occurs,
+your plugin needs to call the displayDzen function. It accepts an integer
+representing the x coordinate that the dzen window should appear at. Each
+plugin has the option menuCommand. This option defaults to ''. This allows
+you to have code such as the following:
+
+```python
+from plugins._plugin import Plugin
+
+__all__ = 'CoolFeaturePlugin'
+
+
+class CoolFeaturePlugin(Plugin):
+
+    def __init__(self, config):
+        self.options = {'coolOption': 'coolValue', 'interval': 1}
+        super().__init__(config, self.options)
+    
+    def main(self):
+        return self.output('This is a fabulous plugin', 'Cool plugin')
+    
+    def onClick(self, event):
+        if event['button'] == 1:
+            if self.options['menuCommand'] == '':
+                self._outputOptions['color'] = '#FF0000'
+            else:
+                self.displayDzen(event['x'])
         else:
             self._outputOptions['color'] = '#0000FF'
 ```

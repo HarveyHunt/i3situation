@@ -54,17 +54,47 @@ class CmusPlugin(Plugin):
                                     stderr=subprocess.STDOUT).decode('utf-8')
         except subprocess.CalledProcessError:
             return self.output('Cmus is not running', 'Cmus is not running')
-        status = self.convertCmusOutput(cmusOutput)
-        outString = self.options['format']
-        for k, v in status.items():
-            outString = outString.replace(k, v)
+        if 'duration' in cmusOutput:
+            status = self.convertCmusOutput(cmusOutput)
+            outString = self.options['format']
+            for k, v in status.items():
+                outString = outString.replace(k, v)
+        else:
+            outString = 'Cmus is not playing anything'
         return self.output(outString, outString)
+
+    def onClick(self, event):
+        """
+        Handle click events.
+        Left mouse: Pause/play
+        Middle mouse: Back a track/Display menu
+        Right mouse: Forward a track
+        """
+        if self.options['menuCommand'] == '':
+            if event['button'] == 1:
+                subprocess.call(['cmus-remote', '-u'])
+            elif event['button'] == 2:
+                subprocess.call(['cmus-remote', '-r'])
+            else:
+                subprocess.call(['cmus-remote', '-n'])
+        else:
+            if event['button'] == 1:
+                subprocess.call(['cmus-remote', '-u'])
+            elif event['button'] == 2:
+                self.displayDzen(event)
+            else:
+                subprocess.call(['cmus-remote', '-n'])
+
 
     def convertCmusOutput(self, cmusOutput):
         """
         Change the newline separated string of output data into
         a dictionary which can then be used to replace the strings in the config
         format.
+
+        cmusOutput: A string with information about cmus that is newline
+        seperated. Running cmus-remote -Q in a terminal will show you what
+        you're dealing with.
         """
         cmusOutput = cmusOutput.split('\n')
         cmusOutput = [x.replace('tag ', '') for x in cmusOutput if not x in '']
@@ -80,6 +110,8 @@ class CmusPlugin(Plugin):
         """
         A helper function to convert seconds into hh:mm:ss for better
         readability.
+
+        time: A string representing time in seconds.
         """
         timeString = str(datetime.timedelta(seconds=int(time)))
         if timeString.split(':')[0] == '0':

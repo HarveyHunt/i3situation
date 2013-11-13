@@ -9,7 +9,7 @@ def read(fname):
 
 setup(name='i3situation',
       packages=find_packages(),
-      version='0.8.0',
+      version='0.9.0',
       description='A replacement for i3status that allows for the use of plugins.',
       author='Harvey Hunt',
       url='https://github.com/HarveyHunt/i3situation',
@@ -18,4 +18,4 @@ setup(name='i3situation',
       keywords="python3 i3situation i3 i3wm i3status i3bar json",
       install_requires=['requests'],
       long_description=read('README.md'),
-      entry_points={'console_scripts': ['i3situation=i3situation.i3situation:main']})
+      entry_points={'console_scripts': ['i3situation=i3situation.main:main']})

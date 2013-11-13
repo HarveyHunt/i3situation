@@ -19,20 +19,28 @@ class Config():
             self._touchDir(self._folderPath)
         self.pluginPath = os.path.join(self._folderPath, 'plugins')
         self._touchDir(self.pluginPath)
-        self.configPath = os.path.join(self._folderPath, 'config')
-        # Auto open the config file- creating it is necessary.
-        open(self.configPath, 'a').close()
+        self.configFilePath = os.path.join(self._folderPath, 'config')
+        if not os.path.exists(self.configFilePath):
+            self.createDefaultConfig()
         self.plugin, self.general = self.reload()
 
     def _touchDir(self, path):
         """
         A helper function to create a directory if it doesn't exist.
+
+        path: A string containing a full path to the directory to be created.
         """
         try:
             os.makedirs(path)
         except OSError as e:
             if e.errno != errno.EEXIST:
                 raise
+
+    def createDefaultConfig(self):
+        s = '[general]\ninterval = 1\nloggingLevel = ERROR\n' \
+            'logFile = ~/.i3situation/log.txt\ncolors = true'
+        with open(self.configFilePath, 'w') as f:
+            f.write(s)
 
     def reload(self):
         """
@@ -42,7 +50,7 @@ class Config():
         self._conf = configparser.SafeConfigParser()
         # Preserve the case of sections and keys.
         self._conf.optionxform = str
-        self._conf.read(self.configPath)
+        self._conf.read(self.configFilePath)
         general = self._replaceDataTypes(dict(self._conf.items('general')))
         self._conf.remove_section('general')
         plugin = []
@@ -55,7 +63,9 @@ class Config():
     def _replaceDataTypes(self, dictionary):
         """
         Replaces strings with appropriate data types (int, boolean).
-        Also replaces the human readable logging levels with the integer form
+        Also replaces the human readable logging levels with the integer form.
+
+        dictionary: A dictionary returned from the config file.
         """
         loggingLevels = {'NONE': 0, 'NULL': 0, 'DEBUG': 10, 'INFO': 20, 'WARNING': 30,
                          'ERROR': 40, 'CRITICAL': 50}

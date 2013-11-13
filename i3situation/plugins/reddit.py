@@ -54,7 +54,7 @@ class RedditPlugin(Plugin):
     def __init__(self, config):
         self.options = {'mode': 'front', 'color': '#FFFFFF', 'interval': 30,
                         'subreddits': ['vim', 'python'], 'username': None,
-                        'password': None, 'limit': 25, 'format': '❴subreddit❵ title ↑ups',
+                        'password': None, 'limit': 25, 'format': '[subreddit] title ↑ups',
                         'sort': 'hot'}
         super().__init__(config)
         self.h = html.parser.HTMLParser()
@@ -112,6 +112,8 @@ class RedditPlugin(Plugin):
         """
         Connects to Reddit and gets a JSON representation of submissions.
         This JSON data is then processed and returned.
+
+        url: A url that requests for submissions should be sent to.
         """
         response = self.client.get(url, params={'limit': self.options['limit']})
         submissions = [x['data'] for x in response.json()['data']['children']]

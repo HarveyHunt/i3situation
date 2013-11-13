@@ -19,7 +19,7 @@ class Status():
     def __init__(self):
         self.config = config.Config()
         self.outputDict = OrderedDict()
-        self._configFilePath = self.config.configPath
+        self._configFilePath = self.config.configFilePath
         self._pluginPath = self.config.pluginPath
         self._configModTime = os.path.getmtime(self._configFilePath)
         self._pluginModTime = os.path.getmtime(self._pluginPath)
@@ -57,6 +57,9 @@ class Status():
     def outputToBar(self, message, comma=True):
         """
         Outputs data to stdout, without buffering.
+
+        message: A string containing the data to be output.
+        comma: Whether or not a comma should be placed at the end of the output.
         """
         if comma:
             message += ','
