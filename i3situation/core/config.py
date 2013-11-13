@@ -19,9 +19,9 @@ class Config():
             self._touchDir(self._folderPath)
         self.pluginPath = os.path.join(self._folderPath, 'plugins')
         self._touchDir(self.pluginPath)
-        self.configPath = os.path.join(self._folderPath, 'config')
-        # Auto open the config file- creating it is necessary.
-        open(self.configPath, 'a').close()
+        self.configFilePath = os.path.join(self._folderPath, 'config')
+        if not os.path.exists(self.configFilePath):
+            self.createDefaultConfig()
         self.plugin, self.general = self.reload()
 
     def _touchDir(self, path):
@@ -36,6 +36,12 @@ class Config():
             if e.errno != errno.EEXIST:
                 raise
 
+    def createDefaultConfig(self):
+        s = '[general]\ninterval = 1\nloggingLevel = ERROR\n' \
+            'logFile = ~/.i3situation/log.txt\ncolors = true'
+        with open(self.configFilePath, 'w') as f:
+            f.write(s)
+
     def reload(self):
         """
         Reload the configuration from the file. This is in its own function
@@ -44,7 +50,7 @@ class Config():
         self._conf = configparser.SafeConfigParser()
         # Preserve the case of sections and keys.
         self._conf.optionxform = str
-        self._conf.read(self.configPath)
+        self._conf.read(self.configFilePath)
         general = self._replaceDataTypes(dict(self._conf.items('general')))
         self._conf.remove_section('general')
         plugin = []

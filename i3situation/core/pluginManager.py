@@ -56,6 +56,8 @@ class Thread(threading.Thread):
     def stop(self):
         """
         Stop the thread from running.
+        The thread doesn't stop immediately, it stops once the running
+        variable is checked, after the thread's interval.
         """
         self.running = False
 

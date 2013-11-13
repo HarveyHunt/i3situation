@@ -19,7 +19,7 @@ class Status():
     def __init__(self):
         self.config = config.Config()
         self.outputDict = OrderedDict()
-        self._configFilePath = self.config.configPath
+        self._configFilePath = self.config.configFilePath
         self._pluginPath = self.config.pluginPath
         self._configModTime = os.path.getmtime(self._configFilePath)
         self._pluginModTime = os.path.getmtime(self._pluginPath)
