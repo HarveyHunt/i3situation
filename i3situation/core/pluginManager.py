@@ -8,6 +8,10 @@ import compileall
 
 
 class MissingPlugin(Exception):
+    """
+    The plugin that has been mentioned in the configuration file doesn't appear
+    in the application's plugin directory.
+    """
     pass
 
 
@@ -19,6 +23,17 @@ class Thread(threading.Thread):
     """
 
     def __init__(self, func, interval, outputDict):
+        """
+        func: The function that will be executed by the thread. It is always the
+        main() function of a plugin.
+
+        interval: How often the func is run. (Time in seconds).
+
+        outputDict: A dictionary containing dictionaries. Is in the format:
+        {pluginName: {information about plugin}, ...}
+        The information about plugin contains data such as the full_text and
+        formatting options.
+        """
         super().__init__(group=None, daemon=True)
         self.func = func
         self.outputDict = outputDict
@@ -39,6 +54,9 @@ class Thread(threading.Thread):
         return
 
     def stop(self):
+        """
+        Stop the thread from running.
+        """
         self.running = False
 
 
@@ -54,12 +72,18 @@ class ThreadManager():
     """
 
     def __init__(self, outputDict):
+        """
+        outputDict: Same as that used in the Thread class ^^^.
+        """
         self._threadPool = []
         self.outputDict = outputDict
 
     def addThread(self, func, interval):
         """
         Creates a thread, starts it and then adds it to the thread pool.
+
+        Func: Same as in the Thread class.
+        Interval: Same as in the Thread class.
         """
         t = Thread(func, interval, self.outputDict)
         t.start()
@@ -111,6 +135,9 @@ class PluginLoader():
     def _loadCompiled(self, filePath):
         """
         Accepts a path to a compiled plugin and returns a module object.
+
+        filePath: A string that represents a complete file path to a compiled
+        plugin.
         """
         name = os.path.splitext(os.path.split(filePath)[-1])[0]
         pluginDirectory = os.sep.join(os.path.split(filePath)[0:-1])

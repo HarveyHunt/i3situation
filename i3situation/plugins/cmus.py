@@ -91,6 +91,10 @@ class CmusPlugin(Plugin):
         Change the newline separated string of output data into
         a dictionary which can then be used to replace the strings in the config
         format.
+
+        cmusOutput: A string with information about cmus that is newline
+        seperated. Running cmus-remote -Q in a terminal will show you what
+        you're dealing with.
         """
         cmusOutput = cmusOutput.split('\n')
         cmusOutput = [x.replace('tag ', '') for x in cmusOutput if not x in '']
@@ -106,6 +110,8 @@ class CmusPlugin(Plugin):
         """
         A helper function to convert seconds into hh:mm:ss for better
         readability.
+
+        time: A string representing time in seconds.
         """
         timeString = str(datetime.timedelta(seconds=int(time)))
         if timeString.split(':')[0] == '0':

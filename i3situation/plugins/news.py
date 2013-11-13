@@ -43,6 +43,9 @@ class NewsPlugin(Plugin):
         """
         Converts the published time (relevant to the epoch) into a human readable
         format.
+
+        publishedTime: An integer representing the time that the article was
+        published at. The time is relevant to the epoch.
         """
         minutes = math.floor((time.time() - publishedTime) / 60)
         if minutes > 1439:
@@ -98,6 +101,9 @@ class NewsPlugin(Plugin):
         """
         Selects a random article from a random topic and removes it from the news
         dictionary.
+
+        news: A dictionary of lists that contain articles (In the form of a
+        dictationary).
         """
         topic = random.choice(list(self.news))
         article = random.choice(self.news[topic])

@@ -27,6 +27,8 @@ class Config():
     def _touchDir(self, path):
         """
         A helper function to create a directory if it doesn't exist.
+
+        path: A string containing a full path to the directory to be created.
         """
         try:
             os.makedirs(path)
@@ -55,7 +57,9 @@ class Config():
     def _replaceDataTypes(self, dictionary):
         """
         Replaces strings with appropriate data types (int, boolean).
-        Also replaces the human readable logging levels with the integer form
+        Also replaces the human readable logging levels with the integer form.
+
+        dictionary: A dictionary returned from the config file.
         """
         loggingLevels = {'NONE': 0, 'NULL': 0, 'DEBUG': 10, 'INFO': 20, 'WARNING': 30,
                          'ERROR': 40, 'CRITICAL': 50}
