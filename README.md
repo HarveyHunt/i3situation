@@ -113,30 +113,7 @@ changing the colour of the output:
 The rest of the output options that can be edited are discussed in the Advanced Plugin 
 Options section of this document.
 
-Below is an example of my i3situation config that I have been using since the start
-of this project:
-
-    [general]
-    interval = 1
-    loggingLevel = ERROR
-    logFile = ~/.i3situation/log.txt
-    colors = true
-     
-    [news]
-    plugin = news
-    interval = 30
-    color = #808080
-     
-    [cmus]
-    plugin = cmus
-    interval = 1
-    color = #808080
-    format = ❴artist - title - position/duration❵
-     
-    [time]
-    plugin= dateTime
-    interval = 1
-    color = #808080
+My personal i3situation configuration file can be found with my [dotfiles](https://github.com/HarveyHunt/dotfiles).
     
 Plugins
 ============
