@@ -218,7 +218,7 @@ limit=25
 be replaced with actual data. For a full list of keywords, look [here](i3situation/plugins/reddit.py)
 
 ```
-format=subreddit title ups↑
+format=subreddit title ups
 ```
 
 * **Sort**: The method with which the Reddit threads are sorted.

@@ -8,8 +8,12 @@ class Config():
     Provides a simplified interface to the configuration of the application.
     """
     def __init__(self):
-        folderLocations = [os.path.join(os.path.expanduser('~'), '.i3situation'),
-                '/etc/i3situation']
+        if os.environ.get('$XDG_CONFIG_HOME', None):
+            folderLocations = [os.path.join(os.environ.get('$XDG_CONFIG_HOME'),
+                'i3situation'), '/etc/i3situation']
+        else:
+            folderLocations = [os.path.join(os.path.expanduser('~'), '.config',
+                'i3situation'), '/etc/i3situation']
         for path in folderLocations:
             if os.path.isdir(path):
                 self._folderPath = path
@@ -38,7 +42,7 @@ class Config():
 
     def createDefaultConfig(self):
         s = '[general]\ninterval = 1\nloggingLevel = ERROR\n' \
-            'logFile = ~/.i3situation/log.txt\ncolors = true'
+            'logFile = ~/.config/i3situation/log.txt\ncolors = true'
         with open(self.configFilePath, 'w') as f:
             f.write(s)
 
