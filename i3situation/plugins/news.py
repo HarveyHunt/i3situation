@@ -27,27 +27,27 @@ class NewsPlugin(Plugin):
         Status object.
         """
         if not hasattr(self, 'news'):
-            self.news = self.getNews()
-        self.article = self.getRandomArticle(self.news)
-        if self.getNumberofArticles() == 1:
-            self.news = self.getNews()
-        outputText = self.options['format'].replace('time', self.getAge(self.article['published']))
-        longOutput = outputText.replace('news', self.article['description'])
-        shortOutput = outputText.replace('news', self.article['title'])
-        return self.output(longOutput, shortOutput)
+            self.news = self.get_news()
+        self.article = self.get_random_article(self.news)
+        if self.get_numberof_articles() == 1:
+            self.news = self.get_news()
+        output_text = self.options['format'].replace('time', self.get_age(self.article['published']))
+        long_output = output_text.replace('news', self.article['description'])
+        short_output = output_text.replace('news', self.article['title'])
+        return self.output(long_output, short_output)
 
-    def onClick(self, event):
+    def on_click(self, event):
         webbrowser.open(self.article['link'])
 
-    def getAge(self, publishedTime):
+    def get_age(self, published_time):
         """
         Converts the published time (relevant to the epoch) into a human readable
         format.
 
-        publishedTime: An integer representing the time that the article was
+        published_time: An integer representing the time that the article was
         published at. The time is relevant to the epoch.
         """
-        minutes = math.floor((time.time() - publishedTime) / 60)
+        minutes = math.floor((time.time() - published_time) / 60)
         if minutes > 1439:
             days = math.floor(minutes / 1440)
             if days > 1:
@@ -65,7 +65,7 @@ class NewsPlugin(Plugin):
         else:
             return "{0} minutes ago".format(minutes)
 
-    def getNews(self):
+    def get_news(self):
         """
         Connects to the BBC API, removes unnecessary data and returns a dictionary
         with topic for a key and stories for the values.
@@ -74,20 +74,20 @@ class NewsPlugin(Plugin):
         for topic in self.options['topics']:
             try:
                 response = urlopen('http://api.bbcnews.appengine.co.uk/stories/{0}'.format(topic))
-                jsonObj = json.loads(response.read().decode())
+                json_obj = json.loads(response.read().decode())
                 # Remove audio and video stories.
-                jsonObj['stories'] = [x for x in jsonObj['stories'] if not 'VIDEO'
+                json_obj['stories'] = [x for x in json_obj['stories'] if not 'VIDEO'
                                     in x['title'] and not 'AUDIO' in x['title']]
                 # Remove thumbnails
-                jsonObj['stories'] = [dict({(k, v) for (k, v) in x.items() if k
-                    not in 'thumbnail'}) for x in jsonObj['stories']]
+                json_obj['stories'] = [dict({(k, v) for (k, v) in x.items() if k
+                    not in 'thumbnail'}) for x in json_obj['stories']]
                 # Rearrange the dictionary to allow multiple topics to coexist.
-                news[jsonObj['topic']['title']] = jsonObj['stories']
+                news[json_obj['topic']['title']] = json_obj['stories']
             except URLError as e:
                 logging.exception(e)
         return news
 
-    def getNumberofArticles(self):
+    def get_numberof_articles(self):
         """
         A helper function to check how many articles are left,
         in order to request new articles.
@@ -97,7 +97,7 @@ class NewsPlugin(Plugin):
             count += len(self.news[topic])
         return count
 
-    def getRandomArticle(self, news):
+    def get_random_article(self, news):
         """
         Selects a random article from a random topic and removes it from the news
         dictionary.

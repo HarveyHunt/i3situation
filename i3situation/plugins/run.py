@@ -16,6 +16,6 @@ class RunPlugin(Plugin):
         super().__init__(config)
 
     def main(self):
-        shellOutput = subprocess.check_output(self.options['command'].split(' '),
+        shell_output = subprocess.check_output(self.options['command'].split(' '),
                                 stderr=subprocess.STDOUT).decode('utf-8')
-        return self.output(shellOutput, shellOutput)
+        return self.output(shell_output, shell_output)

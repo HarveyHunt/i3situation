@@ -50,27 +50,27 @@ class CmusPlugin(Plugin):
         try:
             # Setting stderr to subprocess.STDOUT seems to stop the error
             # message returned by the process from being output to STDOUT.
-            cmusOutput = subprocess.check_output(['cmus-remote', '-Q'],
+            cmus_output = subprocess.check_output(['cmus-remote', '-Q'],
                                     stderr=subprocess.STDOUT).decode('utf-8')
-        except subprocess.CalledProcessError:
+        except subprocess.called_process_error:
             return self.output('Cmus is not running', 'Cmus is not running')
-        if 'duration' in cmusOutput:
-            status = self.convertCmusOutput(cmusOutput)
-            outString = self.options['format']
+        if 'duration' in cmus_output:
+            status = self.convert_cmus_output(cmus_output)
+            out_string = self.options['format']
             for k, v in status.items():
-                outString = outString.replace(k, v)
+                out_string = out_string.replace(k, v)
         else:
-            outString = 'Cmus is not playing anything'
-        return self.output(outString, outString)
+            out_string = 'Cmus is not playing anything'
+        return self.output(out_string, out_string)
 
-    def onClick(self, event):
+    def on_click(self, event):
         """
         Handle click events.
         Left mouse: Pause/play
         Middle mouse: Back a track/Display menu
         Right mouse: Forward a track
         """
-        if self.options['menuCommand'] == '':
+        if self.options['menu_command'] == '':
             if event['button'] == 1:
                 subprocess.call(['cmus-remote', '-u'])
             elif event['button'] == 2:
@@ -81,39 +81,39 @@ class CmusPlugin(Plugin):
             if event['button'] == 1:
                 subprocess.call(['cmus-remote', '-u'])
             elif event['button'] == 2:
-                self.displayDzen(event)
+                self.display_dzen(event)
             else:
                 subprocess.call(['cmus-remote', '-n'])
 
 
-    def convertCmusOutput(self, cmusOutput):
+    def convert_cmus_output(self, cmus_output):
         """
         Change the newline separated string of output data into
         a dictionary which can then be used to replace the strings in the config
         format.
 
-        cmusOutput: A string with information about cmus that is newline
+        cmus_output: A string with information about cmus that is newline
         seperated. Running cmus-remote -Q in a terminal will show you what
         you're dealing with.
         """
-        cmusOutput = cmusOutput.split('\n')
-        cmusOutput = [x.replace('tag ', '') for x in cmusOutput if not x in '']
-        cmusOutput = [x.replace('set ', '') for x in cmusOutput]
+        cmus_output = cmus_output.split('\n')
+        cmus_output = [x.replace('tag ', '') for x in cmus_output if not x in '']
+        cmus_output = [x.replace('set ', '') for x in cmus_output]
         status = {}
-        partitioned = (item.partition(' ') for item in cmusOutput)
+        partitioned = (item.partition(' ') for item in cmus_output)
         status = {item[0]: item[2] for item in partitioned}
-        status['duration'] = self.convertTime(status['duration'])
-        status['position'] = self.convertTime(status['position'])
+        status['duration'] = self.convert_time(status['duration'])
+        status['position'] = self.convert_time(status['position'])
         return status
 
-    def convertTime(self, time):
+    def convert_time(self, time):
         """
         A helper function to convert seconds into hh:mm:ss for better
         readability.
 
         time: A string representing time in seconds.
         """
-        timeString = str(datetime.timedelta(seconds=int(time)))
-        if timeString.split(':')[0] == '0':
-            timeString = timeString.partition(':')[2]
-        return timeString
+        time_string = str(datetime.timedelta(seconds=int(time)))
+        if time_string.split(':')[0] == '0':
+            time_string = time_string.partition(':')[2]
+        return time_string

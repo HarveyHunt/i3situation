@@ -7,7 +7,7 @@ import logging
 import time
 import json
 import os
-from i3situation.core import pluginManager
+from i3situation.core import plugin_manager
 from i3situation.core import config
 
 
@@ -18,43 +18,43 @@ class Status():
     """
     def __init__(self):
         self.config = config.Config()
-        self.outputDict = OrderedDict()
-        self._configFilePath = self.config.configFilePath
-        self._pluginPath = self.config.pluginPath
-        self._configModTime = os.path.getmtime(self._configFilePath)
-        self._pluginModTime = os.path.getmtime(self._pluginPath)
+        self.output_dict = OrderedDict()
+        self._config_file_path = self.config.config_file_path
+        self._plugin_path = self.config.plugin_path
+        self._config_mod_time = os.path.getmtime(self._config_file_path)
+        self._plugin_mod_time = os.path.getmtime(self._plugin_path)
         logger = logging.getLogger()
         # If a stream handler has been attached, remove it.
         if logger.handlers:
             logger.removeHandler(logger.handlers[0])
-        handler = logging.FileHandler(self.config.general['logFile'])
+        handler = logging.FileHandler(self.config.general['log_file'])
         logger.addHandler(handler)
         formatter = logging.Formatter(('[%(asctime)s] - %(levelname)s'
-           ' - %(filename)s - %(funcName)s - %(message)s'),
+           ' - %(filename)s - %(func_name)s - %(message)s'),
            '%d/%m/%Y %I:%M:%S %p')
         handler.setFormatter(formatter)
         # Redirect stderr so that it doesn't confuse i3bar by outputting to it.
-        self.logWriter = self.LoggingWriter(logger, logging.ERROR)
-        sys.stderr = self.logWriter
-        logger.setLevel(self.config.general['loggingLevel'])
-        handler.setLevel(self.config.general['loggingLevel'])
-        logging.debug('Config loaded from {0}'.format(self._configFilePath))
-        logging.debug('Plugin path is located at {0}'.format(self._pluginPath))
-        logging.debug('Last config modification time is: {0}'.format(self._configModTime))
-        logging.debug('Last plugin directory modification time is: {0}'.format(self._pluginModTime))
-        self.outputToBar(json.dumps({'version': 1, 'click_events': True}), False)
-        self.outputToBar('[', False)
+        self.log_writer = self.LoggingWriter(logger, logging.ERROR)
+        sys.stderr = self.log_writer
+        logger.setLevel(self.config.general['logging_level'])
+        handler.setLevel(self.config.general['logging_level'])
+        logging.debug('Config loaded from {0}'.format(self._config_file_path))
+        logging.debug('Plugin path is located at {0}'.format(self._plugin_path))
+        logging.debug('Last config modification time is: {0}'.format(self._config_mod_time))
+        logging.debug('Last plugin directory modification time is: {0}'.format(self._plugin_mod_time))
+        self.output_to_bar(json.dumps({'version': 1, 'click_events': True}), False)
+        self.output_to_bar('[', False)
         logging.debug('Sent initial JSON data to i3bar.')
         logging.debug('Beginning plugin loading process')
-        self.loader = pluginManager.PluginLoader(
-            self._pluginPath, self.config.plugin)
-        self.threadManager = pluginManager.ThreadManager(self.outputDict)
+        self.loader = plugin_manager.PluginLoader(
+            self._plugin_path, self.config.plugin)
+        self.thread_manager = plugin_manager.ThreadManager(self.output_dict)
         # Event handling is done in another thread, so that the main thread
         # isn't stalled.
-        self.eventThread = threading.Thread(target=self.handleEvents)
-        self.eventThread.start()
+        self.event_thread = threading.Thread(target=self.handle_events)
+        self.event_thread.start()
 
-    def outputToBar(self, message, comma=True):
+    def output_to_bar(self, message, comma=True):
         """
         Outputs data to stdout, without buffering.
 
@@ -74,43 +74,43 @@ class Status():
         logging.debug('Reloading config file as files have been modified.')
         self.config.plugin, self.config.general = self.config.reload()
         logging.debug('Reloading plugins as files have been modified.')
-        self.loader = pluginManager.PluginLoader(
-            self._pluginPath, self.config.plugin)
-        self._pluginModTime = os.path.getmtime(self._pluginPath)
-        self._configModTime = os.path.getmtime(self._configFilePath)
+        self.loader = plugin_manager.PluginLoader(
+            self._plugin_path, self.config.plugin)
+        self._plugin_mod_time = os.path.getmtime(self._plugin_path)
+        self._config_mod_time = os.path.getmtime(self._config_file_path)
 
-    def runPlugins(self):
+    def run_plugins(self):
         """
-        Creates a thread for each plugin and lets the ThreadManager handle it.
+        Creates a thread for each plugin and lets the thread_manager handle it.
         """
         for obj in self.loader.objects:
-            # Reserve a slot in the outputDict in order to ensure that the
+            # Reserve a slot in the output_dict in order to ensure that the
             # items are in the correct order.
-            self.outputDict[obj._outputOptions['name']] = None
-            self.threadManager.addThread(obj.main, obj.options['interval'])
+            self.output_dict[obj._output_options['name']] = None
+            self.thread_manager.add_thread(obj.main, obj.options['interval'])
 
     def run(self):
         """
         Monitors if the config file or plugins are updated. Also outputs the
         JSON data generated by the plugins, without needing to poll the threads.
         """
-        self.runPlugins()
+        self.run_plugins()
         while True:
             # Reload plugins and config if either the config file or plugin
             # directory are modified.
-            if self._configModTime != os.path.getmtime(self._configFilePath) or \
-                    self._pluginModTime != os.path.getmtime(self._pluginPath):
-                self.threadManager.killAllThreads()
-                self.outputDict.clear()
+            if self._config_mod_time != os.path.getmtime(self._config_file_path) or \
+                    self._plugin_mod_time != os.path.getmtime(self._plugin_path):
+                self.thread_manager.kill_all_threads()
+                self.output_dict.clear()
                 self.reload()
-                self.runPlugins()
-            self.outputToBar(json.dumps(list(self.outputDict.values())))
+                self.run_plugins()
+            self.output_to_bar(json.dumps(list(self.output_dict.values())))
             logging.debug('Output to bar')
             time.sleep(self.config.general['interval'])
 
-    def handleEvents(self):
+    def handle_events(self):
         """
-        An event handler that processes events from stdin and calls the onClick
+        An event handler that processes events from stdin and calls the on_click
         function of the respective object. This function is run in another
         thread, so as to not stall the main thread.
         """
@@ -119,8 +119,8 @@ class Status():
                 continue
             name = json.loads(event.lstrip(','))['name']
             for obj in self.loader.objects:
-                if obj._outputOptions['name'] == name:
-                    obj.onClick(json.loads(event.lstrip(',')))
+                if obj._output_options['name'] == name:
+                    obj.on_click(json.loads(event.lstrip(',')))
 
     class LoggingWriter():
         """
