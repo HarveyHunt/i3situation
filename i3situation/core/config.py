@@ -71,8 +71,8 @@ class Config():
 
         dictionary: A dictionary returned from the config file.
         """
-        logging_levels = {'NONE': 0, 'NULL': 0, 'DEBUG': 10, 'INFO': 20, 'WARNING': 30,
-                         'ERROR': 40, 'CRITICAL': 50}
+        logging_levels = {'NONE': 0, 'NULL': 0, 'DEBUG': 10, 'INFO': 20,
+                'WARNING': 30, 'ERROR': 40, 'CRITICAL': 50}
         for k, v in dictionary.items():
             if v in ['true', 'True', 'on']:
                 dictionary[k] = True

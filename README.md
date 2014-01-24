@@ -32,8 +32,8 @@ follows:
 
     [general]
     interval = 1
-    loggingLevel = ERROR
-    logFile = ~/.i3situation/log.txt
+    logging_level = ERROR
+    log_file = ~/.i3situation/log.txt
   
 You then need to change the status_command value in the bar section of your i3
 configuration to:
@@ -50,31 +50,31 @@ a reload of all plugins and settings.
 Plugins are configured in the config file. You must first denote a new plugin
 config section by using a unique name for that instance of a plugin. For example:
 
-    [myNewsPlugin]
+    [my_news_plugin]
 
 Inside this section you need to say which plugin you wish to use (Note: the plugin
 field refers to the filename of the plugin less the .py extension).
 
-    [myNewsPlugin]
+    [my_news_plugin]
     plugin = news
     
 Each plugin needs to have an interval set. This interval refers to how often the
 plugin's displayed text is updated.
 
-    [myNewsPlugin]
+    [my_news_plugin]
     plugin = news
     interval = 30
     
-Many plugins also accept a menuCommand. This is a command that is executed when
+Many plugins also accept a menu_command. This is a command that is executed when
 a plugin wishes to display a menu- allowing you to have extremely customisable
 menus. The command should be a dzen2 command, the options available can be seen
 [here](https://github.com/robm/dzen/wiki/_pages). As an example, here is the menu
-command that I use with the dateTime plugin:
+command that I use with the date_time plugin:
 
     [time]
-    plugin = dateTime
+    plugin = date_time
     color = #0d132b
-    menuCommand = cal | dzen2 -y -30 -w 200 -l 7 -p -bg "#70898f" -fg "#0d132b" -e "onstart=uncollapse;button1=exit" -fn "Inconsolata-dz for Powerline 10" -ta c -sa c
+    menu_command = cal | dzen2 -y -30 -w 200 -l 7 -p -bg "#70898f" -fg "#0d132b" -e "onstart=uncollapse;button1=exit" -fn "Inconsolata-dz for Powerline 10" -ta c -sa c
 
 You can specify the x position that dzen2 appears at by using the -x command line
 argument. Alternatively, i3situation can work out the correct x position so that
@@ -95,7 +95,7 @@ A list of values should be comma separated and a boolean value can be written as
 
 The example below illustrates using a comma separated list:
 
-    [myNewsPlugin]
+    [my_news_plugin]
     plugin = news
     interval = 30
     topics = uk,technology
@@ -104,7 +104,7 @@ You can also edit options that affect how the output is displayed (Note: the
 same options are available for all plugins). The following example illustrates
 changing the colour of the output:
 
-    [myNewsPlugin]
+    [my_news_plugin]
     plugin = news
     interval = 30
     topics = uk,technology
@@ -113,7 +113,7 @@ changing the colour of the output:
 The rest of the output options that can be edited are discussed in the Advanced Plugin 
 Options section of this document.
 
-My personal i3situation configuration file can be found with my [dotfiles](https://github.com/HarveyHunt/dotfiles).
+My personal i3situation configuration file can be found with my [dotfiles](https://github.com/harvey_hunt/dotfiles).
     
 Plugins
 ============
@@ -162,20 +162,20 @@ Options:
 * **Time Zone**: The time zone that should be used when finding the time.
 
 ```
-timeZone=GMT
+time_zone=GMT
 ```
 
 * **Long Format**: The text to display when there is a large amount of space. A full list of 
 format options can be found [here](http://docs.python.org/3/library/time.html#time.strftime)
 
 ```
-longFormat=%d-%m-%Y %H:%M:%S
+long_format=%d-%m-%Y %H:%M:%S
 ```
 
 * **Short Format**: The text to be displayed when there is a smaller amount of bar space available.
 
 ```
-shortFormat=%H:%M:%S
+short_format=%H:%M:%S
 ```
 
 ##Reddit
@@ -269,7 +269,7 @@ file in your plugin directory. Note: Files with a leading underscore will not
 be loaded as a plugin but can be
 used for library files.
 
-    vim coolFeature.py
+    vim cool_feature.py
 
 The Plugin base class needs to be imported from the plugins folder.
 
@@ -283,7 +283,7 @@ You should then create a class that inherits the newly imported Plugin class.
 from plugins._plugin import Plugin
 
 
-class CoolFeaturePlugin(Plugin):
+class cool_feature_plugin(Plugin):
 ```    
 
 The \_\_all\_\_ variable needs to be set to the name of your plugin class.
@@ -291,10 +291,10 @@ The \_\_all\_\_ variable needs to be set to the name of your plugin class.
 ```python
 from plugins._plugin import Plugin
 
-__all__ = 'CoolFeaturePlugin'
+__all__ = 'cool_feature_plugin'
 
 
-class CoolFeaturePlugin(Plugin):
+class cool_feature_plugin(Plugin):
 ```
 
 The \_\_init\_\_ function needs to accept two arguments- self and config. The
@@ -303,7 +303,7 @@ configured by the user need to be placed in a dictionary called self.options
 with the format:
 
 ```python
-{'option': 'defaultValue'}
+{'option': 'default_value'}
 ```
 
 Options that can be configured by the user should be declared before calling
@@ -319,13 +319,13 @@ main function of the plugin should be called.
 ```python
 from plugins._plugin import Plugin
 
-__all__ = 'CoolFeaturePlugin'
+__all__ = 'cool_feature_plugin'
 
 
-class CoolFeaturePlugin(Plugin):
+class cool_feature_plugin(Plugin):
 
     def __init__(self, config):
-        self.options = {'coolOption': 'coolValue', 'interval': 1}
+        self.options = {'cool_option': 'cool_value', 'interval': 1}
         super().__init__(config, self.options)
 ```
 
@@ -343,13 +343,13 @@ value to each argument.
 ```python
 from plugins._plugin import Plugin
 
-__all__ = 'CoolFeaturePlugin'
+__all__ = 'cool_feature_plugin'
 
 
-class CoolFeaturePlugin(Plugin):
+class cool_feature_plugin(Plugin):
 
     def __init__(self, config):
-        self.options = {'coolOption': 'coolValue', 'interval': 1}
+        self.options = {'cool_option': 'cool_value', 'interval': 1}
         super().__init__(config, self.options)
     
     def main(self):
@@ -357,7 +357,7 @@ class CoolFeaturePlugin(Plugin):
 ```
 
 It is also possible to create a function that gets executed whenever the plugin's output
-is clicked. The plugin must have an onClick() function that handles the event. The function
+is clicked. The plugin must have an on_click() function that handles the event. The function
 must accept an event dictionary as an argument- the layout of which is below:
 
 ```
@@ -376,68 +376,68 @@ The x and y variables refer to the position that the text was clicked at.
 The name refers to the name of the plugin object that was clicked.
 
 It is possible to do many things once the text has been clicked, but please bear in mind that
-the onClick() code will be run in the same thread as the event handler. Therefore, it is important
-that any code in onClick() isn't too intensive.
+the on_click() code will be run in the same thread as the event handler. Therefore, it is important
+that any code in on_click() isn't too intensive.
 
-Adding an onClick() function to the CoolFeaturePlugin looks as follows:
+Adding an on_click() function to the cool_feature_plugin looks as follows:
 
 ```python
 from plugins._plugin import Plugin
 
-__all__ = 'CoolFeaturePlugin'
+__all__ = 'cool_feature_plugin'
 
 
-class CoolFeaturePlugin(Plugin):
+class cool_feature_plugin(Plugin):
 
     def __init__(self, config):
-        self.options = {'coolOption': 'coolValue', 'interval': 1}
+        self.options = {'cool_option': 'cool_value', 'interval': 1}
         super().__init__(config, self.options)
     
     def main(self):
         return self.output('This is a fabulous plugin', 'Cool plugin')
     
-    def onClick(self, event):
+    def on_click(self, event):
         if event['button'] == 1:
-            self._outputOptions['color'] = '#FF0000'
+            self._output_options['color'] = '#FF0000'
         else:
-            self._outputOptions['color'] = '#0000FF'
+            self._output_options['color'] = '#0000FF'
 ```
 
 If you wish to allow users to display dzen menus when a click event occurs,
-your plugin needs to call the displayDzen function. It accepts an integer
+your plugin needs to call the display_dzen function. It accepts an integer
 representing the x coordinate that the dzen window should appear at. Each
-plugin has the option menuCommand. This option defaults to ''. This allows
+plugin has the option menu_command. This option defaults to ''. This allows
 you to have code such as the following:
 
 ```python
 from plugins._plugin import Plugin
 
-__all__ = 'CoolFeaturePlugin'
+__all__ = 'cool_feature_plugin'
 
 
-class CoolFeaturePlugin(Plugin):
+class cool_feature_plugin(Plugin):
 
     def __init__(self, config):
-        self.options = {'coolOption': 'coolValue', 'interval': 1}
+        self.options = {'cool_option': 'cool_value', 'interval': 1}
         super().__init__(config, self.options)
     
     def main(self):
         return self.output('This is a fabulous plugin', 'Cool plugin')
     
-    def onClick(self, event):
+    def on_click(self, event):
         if event['button'] == 1:
-            if self.options['menuCommand'] == '':
-                self._outputOptions['color'] = '#FF0000'
+            if self.options['menu_command'] == '':
+                self._output_options['color'] = '#FF0000'
             else:
-                self.displayDzen(event['x'])
+                self.display_dzen(event['x'])
         else:
-            self._outputOptions['color'] = '#0000FF'
+            self._output_options['color'] = '#0000FF'
 ```
 
 This is all the code required to create a plugin. There are lots of good
 examples of how to write
 plugins in this [project's plugin
-directory](https://github.com/HarveyHunt/i3situation/tree/master/i3situation/plugins)
+directory](https://github.com/harvey_hunt/i3situation/tree/master/i3situation/plugins)
 
 Advanced Plugin Options
 =============
@@ -449,14 +449,14 @@ following dictionary
 will affect the output options:
 
 ```python
-self._outputOptions['color'] = '#FF00FF'
+self._output_options['color'] = '#FF00FF'
 ```
 
 The following is the internal representation of output options used in the
 Plugin class.
 
 ```python
-self._outputOptions = {
+self._output_options = {
     'color': None,
     'min_width': None,
     'align': None,
