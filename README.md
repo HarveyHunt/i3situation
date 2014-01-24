@@ -20,12 +20,12 @@ assumed that this repository has been
 cloned and that you're in the folder that it was cloned into.
 
     sudo python3 setup.py install
-    mkdir ~/.i3situation
-    cp -r i3situation/plugins/ ~/.i3situation/
+    mkdir ~/.config/i3situation
+    cp -r i3situation/plugins/ ~/.config/i3situation/
     
 Next, use your editor of choice to create a configuration file.
 
-    vim ~/.i3situation/config
+    vim ~/.config/i3situation/config
     
 The minimum that you need to enter in order to run the application is as
 follows:
@@ -33,7 +33,7 @@ follows:
     [general]
     interval = 1
     logging_level = ERROR
-    log_file = ~/.i3situation/log.txt
+    log_file = ~/.config/i3situation/log.txt
   
 You then need to change the status_command value in the bar section of your i3
 configuration to:
@@ -291,10 +291,10 @@ The \_\_all\_\_ variable needs to be set to the name of your plugin class.
 ```python
 from plugins._plugin import Plugin
 
-__all__ = 'cool_feature_plugin'
+__all__ = 'CoolFeaturePlugin'
 
 
-class cool_feature_plugin(Plugin):
+class CoolFeaturePlugin(Plugin):
 ```
 
 The \_\_init\_\_ function needs to accept two arguments- self and config. The
@@ -319,10 +319,10 @@ main function of the plugin should be called.
 ```python
 from plugins._plugin import Plugin
 
-__all__ = 'cool_feature_plugin'
+__all__ = 'CoolFeaturePlugin'
 
 
-class cool_feature_plugin(Plugin):
+class CoolFeaturePlugin(Plugin):
 
     def __init__(self, config):
         self.options = {'cool_option': 'cool_value', 'interval': 1}
@@ -343,10 +343,10 @@ value to each argument.
 ```python
 from plugins._plugin import Plugin
 
-__all__ = 'cool_feature_plugin'
+__all__ = 'CoolFeaturePlugin'
 
 
-class cool_feature_plugin(Plugin):
+class CoolFeaturePlugin(Plugin):
 
     def __init__(self, config):
         self.options = {'cool_option': 'cool_value', 'interval': 1}
@@ -384,10 +384,10 @@ Adding an on_click() function to the cool_feature_plugin looks as follows:
 ```python
 from plugins._plugin import Plugin
 
-__all__ = 'cool_feature_plugin'
+__all__ = 'CoolFeaturePlugin'
 
 
-class cool_feature_plugin(Plugin):
+class CoolFeaturePlugin(Plugin):
 
     def __init__(self, config):
         self.options = {'cool_option': 'cool_value', 'interval': 1}
@@ -412,10 +412,10 @@ you to have code such as the following:
 ```python
 from plugins._plugin import Plugin
 
-__all__ = 'cool_feature_plugin'
+__all__ = 'CoolFeaturePlugin'
 
 
-class cool_feature_plugin(Plugin):
+class CoolFeaturePlugin(Plugin):
 
     def __init__(self, config):
         self.options = {'cool_option': 'cool_value', 'interval': 1}
