@@ -11,7 +11,7 @@ class Plugin():
     user's configuration, as defined in their config file.
     """
     def __init__(self, config):
-        self._output_options = {
+        self.output_options = {
             'color': None,
             'min_width': None,
             'align': None,
@@ -22,8 +22,8 @@ class Plugin():
         # Replace default values with user defined ones.
         self.options.update(config)
         # Allow output options to be overwritten by the user.
-        self._output_options.update((k, v) for k, v in config.items() if k in
-                                   self._output_options)
+        self.output_options.update((k, v) for k, v in config.items() if k in
+                                   self.output_options)
 
     def output(self, full_text, short_text):
         """
@@ -33,9 +33,9 @@ class Plugin():
         short_text: A more concise version of full_text, in case there is minimal
         room on the i3bar.
         """
-        self._output_options.update({'full_text': full_text, 'short_text': short_text})
-        self._output_options = {k: v for k, v in self._output_options.items() if v}
-        return self._output_options
+        self.output_options.update({'full_text': full_text, 'short_text': short_text})
+        self.output_options = {k: v for k, v in self.output_options.items() if v}
+        return self.output_options
 
     def on_click(self, event):
         """

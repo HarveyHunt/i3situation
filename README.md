@@ -398,9 +398,9 @@ class CoolFeaturePlugin(Plugin):
     
     def on_click(self, event):
         if event['button'] == 1:
-            self._output_options['color'] = '#FF0000'
+            self.output_options['color'] = '#FF0000'
         else:
-            self._output_options['color'] = '#0000FF'
+            self.output_options['color'] = '#0000FF'
 ```
 
 If you wish to allow users to display dzen menus when a click event occurs,
@@ -427,11 +427,11 @@ class CoolFeaturePlugin(Plugin):
     def on_click(self, event):
         if event['button'] == 1:
             if self.options['menu_command'] == '':
-                self._output_options['color'] = '#FF0000'
+                self.output_options['color'] = '#FF0000'
             else:
                 self.display_dzen(event['x'])
         else:
-            self._output_options['color'] = '#0000FF'
+            self.output_options['color'] = '#0000FF'
 ```
 
 This is all the code required to create a plugin. There are lots of good
@@ -449,14 +449,14 @@ following dictionary
 will affect the output options:
 
 ```python
-self._output_options['color'] = '#FF00FF'
+self.output_options['color'] = '#FF00FF'
 ```
 
 The following is the internal representation of output options used in the
 Plugin class.
 
 ```python
-self._output_options = {
+self.output_options = {
     'color': None,
     'min_width': None,
     'align': None,

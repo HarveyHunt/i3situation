@@ -86,7 +86,7 @@ class Status():
         for obj in self.loader.objects:
             # Reserve a slot in the output_dict in order to ensure that the
             # items are in the correct order.
-            self.output_dict[obj._output_options['name']] = None
+            self.output_dict[obj.output_options['name']] = None
             self.thread_manager.add_thread(obj.main, obj.options['interval'])
 
     def run(self):
@@ -119,7 +119,7 @@ class Status():
                 continue
             name = json.loads(event.lstrip(','))['name']
             for obj in self.loader.objects:
-                if obj._output_options['name'] == name:
+                if obj.output_options['name'] == name:
                     obj.on_click(json.loads(event.lstrip(',')))
 
     class LoggingWriter():
