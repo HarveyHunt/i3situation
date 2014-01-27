@@ -52,7 +52,7 @@ class CmusPlugin(Plugin):
             # message returned by the process from being output to STDOUT.
             cmus_output = subprocess.check_output(['cmus-remote', '-Q'],
                                     stderr=subprocess.STDOUT).decode('utf-8')
-        except subprocess.called_process_error:
+        except subprocess.CalledProcessError:
             return self.output('Cmus is not running', 'Cmus is not running')
         if 'duration' in cmus_output:
             status = self.convert_cmus_output(cmus_output)
