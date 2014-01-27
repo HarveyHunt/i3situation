@@ -17,7 +17,7 @@ class Status():
     application.
     """
     def __init__(self):
-        self.config = config.Config()
+        self.config = config.Config(self.discover_folder_path())
         self.output_dict = OrderedDict()
         self._config_file_path = self.config.config_file_path
         self._plugin_path = self.config.plugin_path
@@ -53,6 +53,15 @@ class Status():
         # isn't stalled.
         self.event_thread = threading.Thread(target=self.handle_events)
         self.event_thread.start()
+
+    def discover_folder_path(self):
+        if os.environ.get('$XDG_CONFIG_HOME', None):
+            folder_locations = [os.path.join(os.environ.get('$XDG_CONFIG_HOME'),
+                'i3situation'), '/etc/i3situation']
+        else:
+            folder_locations = [os.path.join(os.path.expanduser('~'), '.config',
+                'i3situation'), '/etc/i3situation']
+        return folder_locations
 
     def output_to_bar(self, message, comma=True):
         """
