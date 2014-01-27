@@ -50,20 +50,20 @@ a reload of all plugins and settings.
 Plugins are configured in the config file. You must first denote a new plugin
 config section by using a unique name for that instance of a plugin. For example:
 
-    [my_news_plugin]
+    [my_time_plugin]
 
 Inside this section you need to say which plugin you wish to use (Note: the plugin
 field refers to the filename of the plugin less the .py extension).
 
-    [my_news_plugin]
-    plugin = news
+    [my_time_plugin]
+    plugin = date_time
     
 Each plugin needs to have an interval set. This interval refers to how often the
 plugin's displayed text is updated.
 
-    [my_news_plugin]
-    plugin = news
-    interval = 30
+    [my_time_plugin]
+    plugin = date_time
+    interval = 1
     
 Many plugins also accept a menu_command. This is a command that is executed when
 a plugin wishes to display a menu- allowing you to have extremely customisable
@@ -95,19 +95,21 @@ A list of values should be comma separated and a boolean value can be written as
 
 The example below illustrates using a comma separated list:
 
-    [my_news_plugin]
-    plugin = news
+    [my_reddit_plugin]
+    plugin = reddit
     interval = 30
-    topics = uk,technology
+    mode = subreddit
+    subreddits = programming,linux
     
 You can also edit options that affect how the output is displayed (Note: the
 same options are available for all plugins). The following example illustrates
 changing the colour of the output:
 
-    [my_news_plugin]
-    plugin = news
+    [my_reddit_plugin]
+    plugin = reddit
     interval = 30
-    topics = uk,technology
+    mode = subreddit
+    subreddits = programming,linux
     color = #808080
 
 The rest of the output options that can be edited are discussed in the Advanced Plugin 
@@ -118,31 +120,12 @@ My personal i3situation configuration file can be found with my [dotfiles](https
 Plugins
 ============
 
-* [News](#news)
 * [Cmus](#cmus)
 * [Date and Time](#date and time)
 * [Reddit](#reddit)
 * [Run](#run)
 * [Text](#text)
 * [Conky](#conky)
-
-## News
-The news plugin displays news from the BBC website.
-
-Options:
-* **Topics**: A comma seperated list of topics that shall be displayed.
-(A full list of topics can be found [here](http://api.bbcnews.appengine.co.uk/topics))
-
-```
-topics=uk,technology
-```
-
-* **Format**: A string showing the format in which the output should be displayed.
- Keywords in the string will be replace with data. Possible keywords are time and news.
-
-```
-format=news @ time
-```
 
 ## Cmus
 A plugin to display information provided by Cmus (current song etc).
