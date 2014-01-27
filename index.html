@@ -1,79 +1,547 @@
 <!DOCTYPE html>
 <html>
-
   <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="I3situation : A replacement for i3status written in Python 3 with support for huge customisability through plugins." />
-
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
-    <title>I3situation</title>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>I3situation by HarveyHunt</title>
   </head>
 
   <body>
+    <div id="container">
+      <div class="inner">
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/HarveyHunt/i3situation">View on GitHub</a>
-
-          <h1 id="project_title">I3situation</h1>
-          <h2 id="project_tagline">A replacement for i3status written in Python 3 with support for huge customisability through plugins.</h2>
-
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/HarveyHunt/i3situation/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/HarveyHunt/i3situation/tarball/master">Download this project as a tar.gz file</a>
-            </section>
+        <header>
+          <h1>I3situation</h1>
+          <h2>A replacement for i3status written in Python 3 with support for huge customisability through plugins.</h2>
         </header>
-    </div>
 
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/HarveyHunt/i3situation/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/HarveyHunt/i3situation/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/HarveyHunt/i3situation" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+        <hr>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
+        <section id="main_content">
+          <h1>
+<a name="i3situation" class="anchor" href="#i3situation"><span class="octicon octicon-link"></span></a>i3situation</h1>
+
+<p>A replacement for i3status written in Python 3 with support for huge
+customisability through plugins.</p>
+
+<p>Contents:</p>
+
+<ul>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#configuring-plugins">Configuring Plugins</a></li>
+<li><a href="#plugins">Plugins</a></li>
+<li><a href="#creating-a-plugin">Creating A Plugin</a></li>
+<li><a href="#advanced-plugin-options">Advanced Plugin Options</a></li>
+</ul><h1>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h1>
+
+<p>At the moment, the way to install i3situation is in a manual manner. It is
+assumed that this repository has been
+cloned and that you're in the folder that it was cloned into.</p>
+
+<pre><code>sudo python3 setup.py install
+mkdir ~/.config/i3situation
+cp -r i3situation/plugins/ ~/.config/i3situation/
 </code></pre>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+<p>Next, use your editor of choice to create a configuration file.</p>
 
-<h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+<pre><code>vim ~/.config/i3situation/config
+</code></pre>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+<p>The minimum that you need to enter in order to run the application is as
+follows:</p>
 
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
+<pre><code>[general]
+interval = 1
+logging_level = ERROR
+log_file = ~/.config/i3situation/log.txt
+</code></pre>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<p>You then need to change the status_command value in the bar section of your i3
+configuration to:</p>
 
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+<pre><code>status_command i3situation
+</code></pre>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+<h1>
+<a name="configuring-plugins" class="anchor" href="#configuring-plugins"><span class="octicon octicon-link"></span></a>Configuring Plugins</h1>
 
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+<p>Plugins are the way to get this application to output to i3bar and allow for large
+amounts of expandability. The configuration file is automatically reloaded when
+any changes occur to it. Changing the content of a plugin file will also cause
+a reload of all plugins and settings.</p>
 
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-      </section>
+<p>Plugins are configured in the config file. You must first denote a new plugin
+config section by using a unique name for that instance of a plugin. For example:</p>
+
+<pre><code>[my_news_plugin]
+</code></pre>
+
+<p>Inside this section you need to say which plugin you wish to use (Note: the plugin
+field refers to the filename of the plugin less the .py extension).</p>
+
+<pre><code>[my_news_plugin]
+plugin = news
+</code></pre>
+
+<p>Each plugin needs to have an interval set. This interval refers to how often the
+plugin's displayed text is updated.</p>
+
+<pre><code>[my_news_plugin]
+plugin = news
+interval = 30
+</code></pre>
+
+<p>Many plugins also accept a menu_command. This is a command that is executed when
+a plugin wishes to display a menu- allowing you to have extremely customisable
+menus. The command should be a dzen2 command, the options available can be seen
+<a href="https://github.com/robm/dzen/wiki/_pages">here</a>. As an example, here is the menu
+command that I use with the date_time plugin:</p>
+
+<pre><code>[time]
+plugin = date_time
+color = #0d132b
+menu_command = cal | dzen2 -y -30 -w 200 -l 7 -p -bg "#70898f" -fg "#0d132b" -e "onstart=uncollapse;button1=exit" -fn "Inconsolata-dz for Powerline 10" -ta c -sa c
+</code></pre>
+
+<p>You can specify the x position that dzen2 appears at by using the -x command line
+argument. Alternatively, i3situation can work out the correct x position so that
+dzen2 appears central to the mouse click and aligned to always be on the screen.</p>
+
+<p>You can then change the options for a plugin by defining them next. The available
+options can be seen in the plugin file in a dictionary- with the defaults next to it.</p>
+
+<p>A list of values should be comma separated and a boolean value can be written as:</p>
+
+<ul>
+<li>on</li>
+<li>True</li>
+<li>true</li>
+<li>off</li>
+<li>False</li>
+<li>false</li>
+</ul><p>The example below illustrates using a comma separated list:</p>
+
+<pre><code>[my_news_plugin]
+plugin = news
+interval = 30
+topics = uk,technology
+</code></pre>
+
+<p>You can also edit options that affect how the output is displayed (Note: the
+same options are available for all plugins). The following example illustrates
+changing the colour of the output:</p>
+
+<pre><code>[my_news_plugin]
+plugin = news
+interval = 30
+topics = uk,technology
+color = #808080
+</code></pre>
+
+<p>The rest of the output options that can be edited are discussed in the Advanced Plugin 
+Options section of this document.</p>
+
+<p>My personal i3situation configuration file can be found with my <a href="https://github.com/harvey_hunt/dotfiles">dotfiles</a>.</p>
+
+<h1>
+<a name="plugins" class="anchor" href="#plugins"><span class="octicon octicon-link"></span></a>Plugins</h1>
+
+<ul>
+<li><a href="#news">News</a></li>
+<li><a href="#cmus">Cmus</a></li>
+<li><a href="#date%20and%20time">Date and Time</a></li>
+<li><a href="#reddit">Reddit</a></li>
+<li><a href="#run">Run</a></li>
+<li><a href="#text">Text</a></li>
+<li><a href="#conky">Conky</a></li>
+</ul><h2>
+<a name="news" class="anchor" href="#news"><span class="octicon octicon-link"></span></a>News</h2>
+
+<p>The news plugin displays news from the BBC website.</p>
+
+<p>Options:</p>
+
+<ul>
+<li>
+<strong>Topics</strong>: A comma seperated list of topics that shall be displayed.
+(A full list of topics can be found <a href="http://api.bbcnews.appengine.co.uk/topics">here</a>)</li>
+</ul><pre><code>topics=uk,technology
+</code></pre>
+
+<ul>
+<li>
+<strong>Format</strong>: A string showing the format in which the output should be displayed.
+Keywords in the string will be replace with data. Possible keywords are time and news.</li>
+</ul><pre><code>format=news @ time
+</code></pre>
+
+<h2>
+<a name="cmus" class="anchor" href="#cmus"><span class="octicon octicon-link"></span></a>Cmus</h2>
+
+<p>A plugin to display information provided by Cmus (current song etc).</p>
+
+<p>Options:</p>
+
+<ul>
+<li>
+<strong>Format</strong>: A string showing the format in which the output should be displayed.
+Keywords in the string will be replaced with data. Possible keywords can be found <a href="i3situation/plugins/cmus.py">here</a>.</li>
+</ul><pre><code>format=artist -&gt; title
+</code></pre>
+
+<h2>
+<a name="date-and-time" class="anchor" href="#date-and-time"><span class="octicon octicon-link"></span></a>Date and Time</h2>
+
+<p>A plugin to display the current date and time. Has support for multiple time zones.</p>
+
+<p>Options:</p>
+
+<ul>
+<li>
+<strong>Time Zone</strong>: The time zone that should be used when finding the time.</li>
+</ul><pre><code>time_zone=GMT
+</code></pre>
+
+<ul>
+<li>
+<strong>Long Format</strong>: The text to display when there is a large amount of space. A full list of 
+format options can be found <a href="http://docs.python.org/3/library/time.html#time.strftime">here</a>
+</li>
+</ul><pre><code>long_format=%d-%m-%Y %H:%M:%S
+</code></pre>
+
+<ul>
+<li>
+<strong>Short Format</strong>: The text to be displayed when there is a smaller amount of bar space available.</li>
+</ul><pre><code>short_format=%H:%M:%S
+</code></pre>
+
+<h2>
+<a name="reddit" class="anchor" href="#reddit"><span class="octicon octicon-link"></span></a>Reddit</h2>
+
+<p>A plugin that can display information from Reddit, such as post titles and upvotes.</p>
+
+<p>Options:</p>
+
+<ul>
+<li>
+<strong>Mode</strong>: The mode that the plugin shall operate in. Front page will display threads from the 
+front page of Reddit or your personal front page (provided you have logged in).</li>
+</ul><pre><code>mode=front
+</code></pre>
+
+<ul>
+<li>
+<strong>Subreddits</strong>: The subreddits that should be displayed when the plugin is in subreddit mode. 
+Should be in the form of a comma seperated list.</li>
+</ul><pre><code>subreddits=vim,python
+</code></pre>
+
+<ul>
+<li>
+<strong>Username</strong>: Your Reddit username.</li>
+</ul><pre><code>username=segfaultless
+</code></pre>
+
+<ul>
+<li>
+<strong>Password</strong>: Your Reddit password.</li>
+</ul><pre><code>password=lamepassword
+</code></pre>
+
+<ul>
+<li>
+<strong>Limit</strong>: The amount of threads that should be requested from Reddit in one go.</li>
+</ul><pre><code>limit=25
+</code></pre>
+
+<ul>
+<li>
+<strong>Format</strong>: The format that the plugin's output should be presented in. Keywords will 
+be replaced with actual data. For a full list of keywords, look <a href="i3situation/plugins/reddit.py">here</a>
+</li>
+</ul><pre><code>format=subreddit title ups
+</code></pre>
+
+<ul>
+<li>
+<strong>Sort</strong>: The method with which the Reddit threads are sorted.</li>
+</ul><pre><code>sort=hot
+</code></pre>
+
+<h2>
+<a name="run" class="anchor" href="#run"><span class="octicon octicon-link"></span></a>Run</h2>
+
+<p>A plugin to run shell commands and send the output to i3bar.</p>
+
+<ul>
+<li>
+<strong>Command</strong>: The command that is to be executed.</li>
+</ul><pre><code>command=echo Hello
+</code></pre>
+
+<h2>
+<a name="text" class="anchor" href="#text"><span class="octicon octicon-link"></span></a>Text</h2>
+
+<p>A simple plugin to output text.</p>
+
+<ul>
+<li>
+<strong>Text</strong>: The text that will be displayed.</li>
+</ul><pre><code>text=Hello World
+</code></pre>
+
+<h2>
+<a name="conky" class="anchor" href="#conky"><span class="octicon octicon-link"></span></a>Conky</h2>
+
+<p>A plugin to allow conky's output to be displayed. It is required that you have a valid .conkyrc</p>
+
+<ul>
+<li>
+<strong>Command</strong>: The conky command to be executed.</li>
+</ul><pre><code>command=$uptime
+</code></pre>
+
+<ul>
+<li>
+<strong>Config</strong>: The path to the conkyrc file that shall be used.</li>
+</ul><pre><code>config=~/.conkyrc
+</code></pre>
+
+<h1>
+<a name="creating-a-plugin" class="anchor" href="#creating-a-plugin"><span class="octicon octicon-link"></span></a>Creating a Plugin</h1>
+
+<p>Creating a plugin is a simple process, made easier by the Plugin base class.
+The first step is to create a python
+file in your plugin directory. Note: Files with a leading underscore will not
+be loaded as a plugin but can be
+used for library files.</p>
+
+<pre><code>vim cool_feature.py
+</code></pre>
+
+<p>The Plugin base class needs to be imported from the plugins folder.</p>
+
+<div class="highlight highlight-python"><pre><span class="kn">from</span> <span class="nn">plugins._plugin</span> <span class="kn">import</span> <span class="n">Plugin</span>
+</pre></div>
+
+<p>You should then create a class that inherits the newly imported Plugin class.</p>
+
+<div class="highlight highlight-python"><pre><span class="kn">from</span> <span class="nn">plugins._plugin</span> <span class="kn">import</span> <span class="n">Plugin</span>
+
+
+<span class="k">class</span> <span class="nc">cool_feature_plugin</span><span class="p">(</span><span class="n">Plugin</span><span class="p">):</span>
+</pre></div>
+
+<p>The __all__ variable needs to be set to the name of your plugin class.</p>
+
+<div class="highlight highlight-python"><pre><span class="kn">from</span> <span class="nn">plugins._plugin</span> <span class="kn">import</span> <span class="n">Plugin</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="s">'CoolFeaturePlugin'</span>
+
+
+<span class="k">class</span> <span class="nc">CoolFeaturePlugin</span><span class="p">(</span><span class="n">Plugin</span><span class="p">):</span>
+</pre></div>
+
+<p>The __init__ function needs to accept two arguments- self and config. The
+options that can be
+configured by the user need to be placed in a dictionary called self.options
+with the format:</p>
+
+<div class="highlight highlight-python"><pre><span class="p">{</span><span class="s">'option'</span><span class="p">:</span> <span class="s">'default_value'</span><span class="p">}</span>
+</pre></div>
+
+<p>Options that can be configured by the user should be declared before calling
+the super class'
+__init__ function.</p>
+
+<p>The super class' __init__ function must be passed two arguments- config and
+the user configurable
+options. There is only one compulsary option- interval. This refers to how
+often (in seconds) the
+main function of the plugin should be called.</p>
+
+<div class="highlight highlight-python"><pre><span class="kn">from</span> <span class="nn">plugins._plugin</span> <span class="kn">import</span> <span class="n">Plugin</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="s">'CoolFeaturePlugin'</span>
+
+
+<span class="k">class</span> <span class="nc">CoolFeaturePlugin</span><span class="p">(</span><span class="n">Plugin</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s">'cool_option'</span><span class="p">:</span> <span class="s">'cool_value'</span><span class="p">,</span> <span class="s">'interval'</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">)</span>
+</pre></div>
+
+<p>All plugins must have a main() function that is called by the plugin loader.
+Within this function,
+program logic should be executed and it should return a dictionary to the main
+application. The 
+Plugin base class provides a helper function called output that serves this
+purpose. Output should
+be passed a string as the first argument that represents a detailed output of
+the plugin and a shorter
+string as the second argument. It is perfectly acceptable to pass the same
+value to each argument.</p>
+
+<div class="highlight highlight-python"><pre><span class="kn">from</span> <span class="nn">plugins._plugin</span> <span class="kn">import</span> <span class="n">Plugin</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="s">'CoolFeaturePlugin'</span>
+
+
+<span class="k">class</span> <span class="nc">CoolFeaturePlugin</span><span class="p">(</span><span class="n">Plugin</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s">'cool_option'</span><span class="p">:</span> <span class="s">'cool_value'</span><span class="p">,</span> <span class="s">'interval'</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="s">'This is a fabulous plugin'</span><span class="p">,</span> <span class="s">'Cool plugin'</span><span class="p">)</span>
+</pre></div>
+
+<p>It is also possible to create a function that gets executed whenever the plugin's output
+is clicked. The plugin must have an on_click() function that handles the event. The function
+must accept an event dictionary as an argument- the layout of which is below:</p>
+
+<pre><code>{'button': 1, 'name': 'time', 'y': 1196, 'x': 1846}
+</code></pre>
+
+<p>The button corresponds to which mouse button was used to click the text. The mouse buttons are 
+numbered as follows:</p>
+
+<ol>
+<li>Left Mouse Button</li>
+<li>Middle Mouse Button</li>
+<li>Right Mouse Button</li>
+</ol><p>The x and y variables refer to the position that the text was clicked at.</p>
+
+<p>The name refers to the name of the plugin object that was clicked.</p>
+
+<p>It is possible to do many things once the text has been clicked, but please bear in mind that
+the on_click() code will be run in the same thread as the event handler. Therefore, it is important
+that any code in on_click() isn't too intensive.</p>
+
+<p>Adding an on_click() function to the cool_feature_plugin looks as follows:</p>
+
+<div class="highlight highlight-python"><pre><span class="kn">from</span> <span class="nn">plugins._plugin</span> <span class="kn">import</span> <span class="n">Plugin</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="s">'CoolFeaturePlugin'</span>
+
+
+<span class="k">class</span> <span class="nc">CoolFeaturePlugin</span><span class="p">(</span><span class="n">Plugin</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s">'cool_option'</span><span class="p">:</span> <span class="s">'cool_value'</span><span class="p">,</span> <span class="s">'interval'</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="s">'This is a fabulous plugin'</span><span class="p">,</span> <span class="s">'Cool plugin'</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">on_click</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">event</span><span class="p">[</span><span class="s">'button'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output_options</span><span class="p">[</span><span class="s">'color'</span><span class="p">]</span> <span class="o">=</span> <span class="s">'#FF0000'</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output_options</span><span class="p">[</span><span class="s">'color'</span><span class="p">]</span> <span class="o">=</span> <span class="s">'#0000FF'</span>
+</pre></div>
+
+<p>If you wish to allow users to display dzen menus when a click event occurs,
+your plugin needs to call the display_dzen function. It accepts an integer
+representing the x coordinate that the dzen window should appear at. Each
+plugin has the option menu_command. This option defaults to ''. This allows
+you to have code such as the following:</p>
+
+<div class="highlight highlight-python"><pre><span class="kn">from</span> <span class="nn">plugins._plugin</span> <span class="kn">import</span> <span class="n">Plugin</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="s">'CoolFeaturePlugin'</span>
+
+
+<span class="k">class</span> <span class="nc">CoolFeaturePlugin</span><span class="p">(</span><span class="n">Plugin</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s">'cool_option'</span><span class="p">:</span> <span class="s">'cool_value'</span><span class="p">,</span> <span class="s">'interval'</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="s">'This is a fabulous plugin'</span><span class="p">,</span> <span class="s">'Cool plugin'</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">on_click</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">event</span><span class="p">[</span><span class="s">'button'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">'menu_command'</span><span class="p">]</span> <span class="o">==</span> <span class="s">''</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">output_options</span><span class="p">[</span><span class="s">'color'</span><span class="p">]</span> <span class="o">=</span> <span class="s">'#FF0000'</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">display_dzen</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="s">'x'</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output_options</span><span class="p">[</span><span class="s">'color'</span><span class="p">]</span> <span class="o">=</span> <span class="s">'#0000FF'</span>
+</pre></div>
+
+<p>This is all the code required to create a plugin. There are lots of good
+examples of how to write
+plugins in this <a href="https://github.com/harvey_hunt/i3situation/tree/master/i3situation/plugins">project's plugin
+directory</a></p>
+
+<h1>
+<a name="advanced-plugin-options" class="anchor" href="#advanced-plugin-options"><span class="octicon octicon-link"></span></a>Advanced Plugin Options</h1>
+
+<p>It is also possible to manipulate many aspects of a plugin's output. The Plugin
+class provides
+a way to set the value of output options (blocks). Changing values in the
+following dictionary
+will affect the output options:</p>
+
+<div class="highlight highlight-python"><pre><span class="bp">self</span><span class="o">.</span><span class="n">output_options</span><span class="p">[</span><span class="s">'color'</span><span class="p">]</span> <span class="o">=</span> <span class="s">'#FF00FF'</span>
+</pre></div>
+
+<p>The following is the internal representation of output options used in the
+Plugin class.</p>
+
+<div class="highlight highlight-python"><pre><span class="bp">self</span><span class="o">.</span><span class="n">output_options</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">'color'</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+    <span class="s">'min_width'</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+    <span class="s">'align'</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+    <span class="s">'name'</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+    <span class="s">'urgent'</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+    <span class="s">'seperator'</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+    <span class="s">'seperator_block_width'</span><span class="p">:</span> <span class="bp">None</span><span class="p">}</span>
+</pre></div>
+
+<p>For a full explanation of each output option, please refer to section 2.2 of
+the excellent 
+i3bar documentation:
+<a href="http://i3wm.org/docs/i3bar-protocol.html">i3Bar Protocol</a></p>
+        </section>
+
+        <footer>
+          I3situation is maintained by <a href="https://github.com/HarveyHunt">HarveyHunt</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+                  <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-47516994-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+      </div>
     </div>
-
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">I3situation maintained by <a href="https://github.com/HarveyHunt">HarveyHunt</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
-
-    
-
   </body>
 </html>
