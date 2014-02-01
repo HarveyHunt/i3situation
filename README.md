@@ -4,7 +4,8 @@ i3situation
 A replacement for i3status written in Python 3 with support for huge
 customisability through plugins.
 
-Contents:
+Contents
+============
 
 * [Installation](#installation)
 * [Configuring Plugins](#configuring-plugins)
@@ -15,13 +16,17 @@ Contents:
 Installation
 =============
 
-At the moment, the way to install i3situation is in a manual manner. It is
-assumed that this repository has been
-cloned and that you're in the folder that it was cloned into.
+If you're lucky enough to be using Arch Linux, i3situation is available from the [AUR](https://aur.archlinux.org/packages/i3situation-git/).
 
-    sudo python3 setup.py install
-    mkdir ~/.config/i3situation
-    cp -r i3situation/plugins/ ~/.config/i3situation/
+If you want to install straight from this git repository, first clone it and then change
+into the cloned directory.
+
+    git clone https://github.com/HarveyHunt/i3situation
+    cd i3situation
+
+You then need to install i3situation using the setup.py file that is provided.
+
+    sudo python setup.py install
     
 Next, use your editor of choice to create a configuration file.
 
@@ -39,6 +44,9 @@ You then need to change the status_command value in the bar section of your i3
 configuration to:
 
     status_command i3situation
+    
+It is a good idea to run i3situation at this point, as it will handle copying over the
+plugins into your configuration directory.
     
 Configuring Plugins
 =============
