@@ -9,7 +9,7 @@ def read(fname):
 
 setup(name='i3situation',
       packages=find_packages(),
-      version='1.0.0',
+      version='1.0.1',
       description='A replacement for i3status that allows for the use of plugins.',
       author='Harvey Hunt',
       url='https://github.com/HarveyHunt/i3situation',
