@@ -1,6 +1,6 @@
 #!/usr/bin/python3
-from i3situation.core import status
 import logging
+from i3situation.core import status
 
 
 def main():

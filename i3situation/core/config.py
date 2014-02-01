@@ -21,7 +21,8 @@ class Config():
             self._folder_path = folder_locations[0]
             self._touch_dir(self._folder_path)
         self.plugin_path = os.path.join(self._folder_path, 'plugins')
-        self._touch_dir(self.plugin_path)
+        if not os.path.exists(self.plugin_path):
+            self._touch_dir(self.plugin_path)
         self.config_file_path = os.path.join(self._folder_path, 'config')
         if not os.path.exists(self.config_file_path):
             self.create_default_config()

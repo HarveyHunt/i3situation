@@ -1,4 +1,5 @@
 import glob
+import shutil
 import imp
 import logging
 import time
@@ -110,6 +111,11 @@ class PluginLoader():
     """
     def __init__(self, dir_path, config):
         self.dir_path = dir_path
+        if len(glob.glob(self.dir_path + '/*')) == 0:
+            source_path = '/'.join(os.path.dirname(__file__).split('/')[0:-1])
+            source_path = os.path.join(source_path, 'plugins')
+            shutil.rmtree(self.dir_path)
+            shutil.copytree(source_path, self.dir_path)
         self._compile_files()
         self._config = config
         self.plugins = self.refresh_files()
