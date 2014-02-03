@@ -113,9 +113,8 @@ class PluginLoader():
         self.dir_path = dir_path
         source_path = '/'.join(os.path.dirname(__file__).split('/')[0:-1])
         source_path = os.path.join(source_path, 'plugins')
-        install_time = os.path.getmtime(source_path)
-        if len(glob.glob(self.dir_path + '/*')) == 0 or install_time > \
-                os.path.getmtime(self.dir_path):
+        if len(glob.glob(self.dir_path + '/*')) < len(glob.glob(source_path + '/*')) \
+                or os.path.getmtime(source_path) > os.path.getmtime(self.dir_path):
             shutil.rmtree(self.dir_path)
             shutil.copytree(source_path, self.dir_path)
         self._compile_files()
