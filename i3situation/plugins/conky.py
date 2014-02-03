@@ -12,6 +12,14 @@ class ConkyPlugin(Plugin):
         super().__init__(config)
 
     def main(self):
-        out = subprocess.check_output(['conky', '-i', '1', '-t',
-            self.options['command'], '-c', self.options['config']]).decode('utf8')
+        try:
+            out = subprocess.check_output(['conky', '-i', '1', '-t',
+                self.options['command'], '-c', self.options['config']]).decode('utf8')
+        except subprocess.CalledProcessError:
+            out = 'A non-zero exit status was returned.'
+            self.output_options['color'] = '#FF0000'
+        except FileNotFoundError:
+            out = 'Conky isn\'t installed.'
+            self.output_options['color'] = '#FF0000'
+
         return self.output(out, out)
