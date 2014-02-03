@@ -57,6 +57,8 @@ class RedditPlugin(Plugin):
                         'password': None, 'limit': 25, 'format': '[subreddit] title ↑ups',
                         'sort': 'hot'}
         super().__init__(config)
+        if isinstance(self.options['subreddits'], str):
+            self.options['subreddits'] = [self.options['subreddits']]
         self.h = html.parser.HTMLParser()
         self.client = requests.session()
         self.client.headers.update({'user-agent': 'i3situation reddit plugin'})
@@ -74,6 +76,8 @@ class RedditPlugin(Plugin):
         return self.output(out_string, out_string)
 
     def on_click(self, event):
+        # FIXME: The webbrowser module decides to allow firefox to dump
+        # everything to STDOUT/ERR and this messes with i3bar.
         webbrowser.open(self.selected_submission['url'])
 
     def login(self):
