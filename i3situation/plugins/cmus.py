@@ -53,14 +53,14 @@ class CmusPlugin(Plugin):
             cmus_output = subprocess.check_output(['cmus-remote', '-Q'],
                                     stderr=subprocess.STDOUT).decode('utf-8')
         except subprocess.CalledProcessError:
-            return self.output('Cmus is not running', 'Cmus is not running')
+            return self.output(None, None)
         if 'duration' in cmus_output:
             status = self.convert_cmus_output(cmus_output)
             out_string = self.options['format']
             for k, v in status.items():
                 out_string = out_string.replace(k, v)
         else:
-            out_string = 'Cmus is not playing anything'
+            out_string = None
         return self.output(out_string, out_string)
 
     def on_click(self, event):

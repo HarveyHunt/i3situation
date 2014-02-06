@@ -113,9 +113,17 @@ class Status():
                 self.output_dict.clear()
                 self.reload()
                 self.run_plugins()
-            self.output_to_bar(json.dumps(list(self.output_dict.values())))
+            self.output_to_bar(json.dumps(self._remove_empty_output()))
             logging.debug('Output to bar')
             time.sleep(self.config.general['interval'])
+
+    def _remove_empty_output(self):
+        output = []
+        for key in self.output_dict:
+            if self.output_dict[key] is not None and 'full_text' in self.output_dict[key]:
+                output.append(self.output_dict[key])                
+        return output
+        
 
     def handle_events(self):
         """
