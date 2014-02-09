@@ -1,7 +1,5 @@
 import sys
-import glob
 import threading
-import select
 from collections import OrderedDict
 import logging
 import time
@@ -9,6 +7,23 @@ import json
 import os
 from i3situation.core import plugin_manager
 from i3situation.core import config
+
+def setup_file_logger(filename, formatting, log_level):
+    """
+    A helper function for creating a file logger.
+    Accepts arguments, as it is used in Status and LoggingWriter.
+    """
+    logger = logging.getLogger()
+    # If a stream handler has been attached, remove it.
+    if logger.handlers:
+        logger.removeHandler(logger.handlers[0])
+    handler = logging.FileHandler(filename)
+    logger.addHandler(handler)
+    formatter = logging.Formatter(*formatting)
+    handler.setFormatter(formatter)
+    logger.setLevel(log_level)
+    handler.setLevel(log_level)
+    return logger
 
 
 class Status():
@@ -23,21 +38,15 @@ class Status():
         self._plugin_path = self.config.plugin_path
         self._config_mod_time = os.path.getmtime(self._config_file_path)
         self._plugin_mod_time = os.path.getmtime(self._plugin_path)
-        logger = logging.getLogger()
-        # If a stream handler has been attached, remove it.
-        if logger.handlers:
-            logger.removeHandler(logger.handlers[0])
-        handler = logging.FileHandler(self.config.general['log_file'])
-        logger.addHandler(handler)
-        formatter = logging.Formatter(('[%(asctime)s] - %(levelname)s'
-           ' - %(filename)s - %(func_name)s - %(message)s'),
-           '%d/%m/%Y %I:%M:%S %p')
-        handler.setFormatter(formatter)
+        log_formatting = ('[%(asctime)s] - %(levelname)s - %(filename)s - ' \
+                '%(funcName)s - %(message)s', '%d/%m/%Y %I:%M:%S %p')
+        self.logger = setup_file_logger(self.config.general['log_file'],
+                log_formatting, self.config.general['logging_level'])
+                
         # Redirect stderr so that it doesn't confuse i3bar by outputting to it.
-        self.log_writer = self.LoggingWriter(logger, logging.ERROR)
+        self.log_writer = self.LoggingWriter(
+                self.config.general['log_file'], self.config.general['logging_level'])
         sys.stderr = self.log_writer
-        logger.setLevel(self.config.general['logging_level'])
-        handler.setLevel(self.config.general['logging_level'])
         logging.debug('Config loaded from {0}'.format(self._config_file_path))
         logging.debug('Plugin path is located at {0}'.format(self._plugin_path))
         logging.debug('Last config modification time is: {0}'.format(self._config_mod_time))
@@ -114,7 +123,6 @@ class Status():
                 self.reload()
                 self.run_plugins()
             self.output_to_bar(json.dumps(self._remove_empty_output()))
-            logging.debug('Output to bar')
             time.sleep(self.config.general['interval'])
 
     def _remove_empty_output(self):
@@ -128,7 +136,6 @@ class Status():
             if self.output_dict[key] is not None and 'full_text' in self.output_dict[key]:
                 output.append(self.output_dict[key])                
         return output
-        
 
     def handle_events(self):
         """
@@ -149,10 +156,19 @@ class Status():
         A simple class that provides a file like interface to the logging
         utility. Allows stderr to be redirected to logging.
         """
-        def __init__(self, logger, level):
-            self.logger = logger
-            self.level = level
+        def __init__(self, filename, logging_level):
+            # FIXME: This formatting string overwrites the one defined
+            # before, has been mentioned on the internet as being a bug
+            # in th elogging module, will investigate later.
+            formatting = ('[%(asctime)s] - %(levelname)s - %(filename)s -' \
+                    ' %(threadName)s - %(funcName)s - %(message)s',
+                    '%d/%m/%Y %I:%M:%S %p')
+            self.logger = setup_file_logger(filename, formatting, logging_level)
+            self.logging_level = logging_level
 
         def write(self, message):
+            """
+            Called once stderr is replaced and data needs to be written.
+            """
             if message != '\n':
-                self.logger.log(self.level, message)
+                self.logger.log(self.logging_level, message)
