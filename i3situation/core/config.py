@@ -65,7 +65,7 @@ class Config():
             plugin[-1].update({'name': section})
             plugin[-1] = self._replace_data_types(plugin[-1])
         return (plugin, general)
-    
+
     @staticmethod
     def _replace_data_types(dictionary):
         """

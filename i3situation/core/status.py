@@ -42,7 +42,7 @@ class Status():
                 '%(funcName)s - %(message)s', '%d/%m/%Y %I:%M:%S %p')
         self.logger = setup_file_logger(self.config.general['log_file'],
                 log_formatting, self.config.general['logging_level'])
-                
+
         # Redirect stderr so that it doesn't confuse i3bar by outputting to it.
         self.log_writer = self.LoggingWriter(
                 self.config.general['log_file'], self.config.general['logging_level'])
@@ -134,7 +134,7 @@ class Status():
         output = []
         for key in self.output_dict:
             if self.output_dict[key] is not None and 'full_text' in self.output_dict[key]:
-                output.append(self.output_dict[key])                
+                output.append(self.output_dict[key])
         return output
 
     def handle_events(self):

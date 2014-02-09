@@ -7,7 +7,7 @@ class Plugin():
     It handles defaults, replacing options and managing lower level
     settings that a plugin developer need not bother with.
 
-    config: A dictionary obtained from the config parser that has the 
+    config: A dictionary obtained from the config parser that has the
     user's configuration, as defined in their config file.
     """
     def __init__(self, config):
