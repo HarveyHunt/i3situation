@@ -18,6 +18,8 @@ Installation
 
 If you're lucky enough to be using Arch Linux, i3situation is available from the [AUR](https://aur.archlinux.org/packages/i3situation-git/).
 
+i3situation is also available over at [PyPi](https://pypi.python.org/pypi/i3situation/1.0.1).
+
 If you want to install straight from this git repository, first clone it and then change
 into the cloned directory.
 
