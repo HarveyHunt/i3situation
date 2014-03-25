@@ -52,8 +52,8 @@ class Plugin():
         doesn't set it.
         """
         if event['button'] == 1 and 'button1' in self.options:
-            subprocess.call(self.options['button1'])
+            subprocess.call(self.options['button1'].split())
         elif event['button'] == 2 and 'button2' in self.options:
-            subprocess.call(self.options['button2'])
+            subprocess.call(self.options['button2'].split())
         elif event['button'] == 3 and 'button3' in self.options:
-            subprocess.call(self.options['button3'])
+            subprocess.call(self.options['button3'].split())
