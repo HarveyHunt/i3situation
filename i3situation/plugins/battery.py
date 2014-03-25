@@ -13,7 +13,6 @@ class BatteryPlugin(Plugin):
 
     def __init__(self, config):
         self.options = {'format': '<charge>%',
-                        'battery': 'BAT0',
                         'low_threshold': 20,
                         'low_color': '#FF0000',
                         'discharging_color': '#FF6103',
