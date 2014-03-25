@@ -4,6 +4,8 @@ i3situation
 A replacement for i3status written in Python 3 with support for huge
 customisability through plugins.
 
+Please feel free to send a pull request or request features by opening an issue.
+
 Contents
 ============
 
@@ -136,6 +138,7 @@ Plugins
 * [Run](#run)
 * [Text](#text)
 * [Conky](#conky)
+* [Battery](#battery)
 
 ## Cmus
 A plugin to display information provided by Cmus (current song etc).
@@ -251,6 +254,59 @@ command=$uptime
 
 ```
 config=~/.conkyrc
+```
+
+## Battery
+A plugin that displays information about the battery, such as charge level and status.
+
+* **format**: The format of the output. <status> will be replaced by the battery's current status
+and <charge> will be replaced by the current charge level.
+
+```
+format=<charge>%
+```
+
+* **percentage**: Whether or not the charge should be calculated as a percentage.
+
+```
+percentage=True
+```
+
+* **low_threshold**: The value of charge below which the low_color will be displayed. Note: this value
+should be from 0 to 1 when percentage isn't set and 0 to 100 when it is set.
+
+```
+low_threshold=20
+```
+
+* **low_color**: The colour to be displayed when the battery charge level is classed as low.
+
+```
+low_color=#FF0000
+```
+
+* **discharging_color**: The colour to be displayed when the battery is discharging.
+
+```
+discharging_color=#FF6103
+```
+
+* **charging_color**: The colour to be displayed when the battery is charging.
+
+```
+charging_color=#00F000
+```
+
+* **full_color**: The colour to be displayed when the battery is full.
+
+```
+full_color=#FFFFFF
+```
+
+* **battery_path**: The path to the battery file- generally in the form /sys/class/power_supply/BATX.
+
+```
+battery_path=/sys/class/power_supply/BAT0
 ```
 
 Creating a Plugin
