@@ -13,6 +13,7 @@ Contents
 * [Configuring Plugins](#configuring-plugins)
 * [Plugins](#plugins)
 * [Creating A Plugin](#creating-a-plugin)
+    * [Events](#events)
 * [Advanced Plugin Options](#advanced-plugin-options)
 
 Installation
@@ -76,22 +77,16 @@ plugin's displayed text is updated.
     [my_time_plugin]
     plugin = date_time
     interval = 1
-    
-Many plugins also accept a menu_command. This is a command that is executed when
-a plugin wishes to display a menu- allowing you to have extremely customisable
-menus. The command should be a dzen2 command, the options available can be seen
-[here](https://github.com/robm/dzen/wiki/_pages). As an example, here is the menu
-command that I use with the date_time plugin:
 
-    [time]
+Each plugin has an on_click function already defined. This function allows the user to
+specify a shell command that should be executed each time a plugin's text area is clicked
+with a mouse button (of which there are three, defined [here](#events)). For example:
+
+    [my_time_plugin]
     plugin = date_time
-    color = #0d132b
-    menu_command = cal | dzen2 -y -30 -w 200 -l 7 -p -bg "#70898f" -fg "#0d132b" -e "onstart=uncollapse;button1=exit" -fn "Inconsolata-dz for Powerline 10" -ta c -sa c
-
-You can specify the x position that dzen2 appears at by using the -x command line
-argument. Alternatively, i3situation can work out the correct x position so that
-dzen2 appears central to the mouse click and aligned to always be on the screen.
-
+    interval = 1
+    button1 = urxvt
+    button2 = xterm
     
 You can then change the options for a plugin by defining them next. The available
 options can be seen in the plugin file in a dictionary- with the defaults next to it.
@@ -405,6 +400,9 @@ class CoolFeaturePlugin(Plugin):
         return self.output('This is a fabulous plugin', 'Cool plugin')
 ```
 
+Events
+-----------
+
 It is also possible to create a function that gets executed whenever the plugin's output
 is clicked. The plugin must have an on_click() function that handles the event. The function
 must accept an event dictionary as an argument- the layout of which is below:
@@ -448,37 +446,6 @@ class CoolFeaturePlugin(Plugin):
     def on_click(self, event):
         if event['button'] == 1:
             self.output_options['color'] = '#FF0000'
-        else:
-            self.output_options['color'] = '#0000FF'
-```
-
-If you wish to allow users to display dzen menus when a click event occurs,
-your plugin needs to call the display_dzen function. It accepts an integer
-representing the x coordinate that the dzen window should appear at. Each
-plugin has the option menu_command. This option defaults to ''. This allows
-you to have code such as the following:
-
-```python
-from plugins._plugin import Plugin
-
-__all__ = 'CoolFeaturePlugin'
-
-
-class CoolFeaturePlugin(Plugin):
-
-    def __init__(self, config):
-        self.options = {'cool_option': 'cool_value', 'interval': 1}
-        super().__init__(config, self.options)
-    
-    def main(self):
-        return self.output('This is a fabulous plugin', 'Cool plugin')
-    
-    def on_click(self, event):
-        if event['button'] == 1:
-            if self.options['menu_command'] == '':
-                self.output_options['color'] = '#FF0000'
-            else:
-                self.display_dzen(event['x'])
         else:
             self.output_options['color'] = '#0000FF'
 ```
