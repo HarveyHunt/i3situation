@@ -20,7 +20,3 @@ class DateTimePlugin(Plugin):
         long_time = time.strftime(self.options['long_format'], time.localtime(cur))
         short_time = time.strftime(self.options['short_format'], time.localtime(cur))
         return self.output(long_time, short_time)
-
-    def on_click(self, event):
-        if self.options['menu_command'] != '':
-            self.display_dzen(event)

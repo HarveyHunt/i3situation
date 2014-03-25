@@ -63,29 +63,6 @@ class CmusPlugin(Plugin):
             out_string = None
         return self.output(out_string, out_string)
 
-    def on_click(self, event):
-        """
-        Handle click events.
-        Left mouse: Pause/play
-        Middle mouse: Back a track/Display menu
-        Right mouse: Forward a track
-        """
-        if self.options['menu_command'] == '':
-            if event['button'] == 1:
-                subprocess.call(['cmus-remote', '-u'])
-            elif event['button'] == 2:
-                subprocess.call(['cmus-remote', '-r'])
-            else:
-                subprocess.call(['cmus-remote', '-n'])
-        else:
-            if event['button'] == 1:
-                subprocess.call(['cmus-remote', '-u'])
-            elif event['button'] == 2:
-                self.display_dzen(event)
-            else:
-                subprocess.call(['cmus-remote', '-n'])
-
-
     def convert_cmus_output(self, cmus_output):
         """
         Change the newline separated string of output data into

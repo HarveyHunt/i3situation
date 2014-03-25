@@ -5,6 +5,7 @@ import configparser
 
 from i3situation.core import config
 
+
 class TestDataTypeReplacement(unittest.TestCase):
 
     def test_replace_data_types(self):
@@ -62,7 +63,8 @@ class TestConfigIncorrectFile(unittest.TestCase):
     def test_wrong_path(self):
         with self.assertRaises(OSError):
             c = config.Config(os.path.join(os.path.expanduser('~'),
-                                            'i3situation-test' ))
+                                            'i3situation-test'))
+
     def test_missing_header(self):
         self._create_config('WRONGDATA')
         with self.assertRaises(configparser.MissingSectionHeaderError):

@@ -136,7 +136,7 @@ class PluginLoader():
                 return
             # Recompile if there are newer plugins.
             elif os.path.getmtime(os.path.join(self.dir_path, f)) > os.path.getmtime(
-                os.path.join(self.dir_path, f + 'c')):
+                    os.path.join(self.dir_path, f + 'c')):
                 compileall.compile_dir(self.dir_path, quiet=True)
                 logging.debug('Compiled plugins as a plugin has been changed.')
                 return

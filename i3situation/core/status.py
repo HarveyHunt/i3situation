@@ -8,6 +8,7 @@ import os
 from i3situation.core import plugin_manager
 from i3situation.core import config
 
+
 def setup_file_logger(filename, formatting, log_level):
     """
     A helper function for creating a file logger.
@@ -38,7 +39,7 @@ class Status():
         self._plugin_path = self.config.plugin_path
         self._config_mod_time = os.path.getmtime(self._config_file_path)
         self._plugin_mod_time = os.path.getmtime(self._plugin_path)
-        log_formatting = ('[%(asctime)s] - %(levelname)s - %(filename)s - ' \
+        log_formatting = ('[%(asctime)s] - %(levelname)s - %(filename)s - '
                 '%(funcName)s - %(message)s', '%d/%m/%Y %I:%M:%S %p')
         self.logger = setup_file_logger(self.config.general['log_file'],
                 log_formatting, self.config.general['logging_level'])
@@ -160,9 +161,9 @@ class Status():
             # FIXME: This formatting string overwrites the one defined
             # before, has been mentioned on the internet as being a bug
             # in th elogging module, will investigate later.
-            formatting = ('[%(asctime)s] - %(levelname)s - %(filename)s -' \
-                    ' %(threadName)s - %(funcName)s - %(message)s',
-                    '%d/%m/%Y %I:%M:%S %p')
+            formatting = ('[%(asctime)s] - %(levelname)s - %(filename)s -'
+                            ' %(threadName)s - %(funcName)s - %(message)s',
+                            '%d/%m/%Y %I:%M:%S %p')
             self.logger = setup_file_logger(filename, formatting, logging_level)
             self.logging_level = logging_level
 

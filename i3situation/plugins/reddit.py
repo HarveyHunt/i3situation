@@ -75,11 +75,6 @@ class RedditPlugin(Plugin):
             out_string = out_string.replace(k, str(v))
         return self.output(out_string, out_string)
 
-    def on_click(self, event):
-        # FIXME: The webbrowser module decides to allow firefox to dump
-        # everything to STDOUT/ERR and this messes with i3bar.
-        webbrowser.open(self.selected_submission['url'])
-
     def login(self):
         """
         Logs into Reddit in order to display a personalised front page.

@@ -43,7 +43,7 @@ class BatteryPlugin(Plugin):
 
         output = self.options['format'].replace('<charge>', str(charge))
         output = output.replace('<status>', status)
-        
+
         return self.output(output, output)
 
     def get_battery_state(self, prop):

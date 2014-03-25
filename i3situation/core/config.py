@@ -6,6 +6,7 @@ import configparser
 class IncompleteConfigurationFile(ValueError):
     pass
 
+
 class Config():
     """
     Provides a simplified interface to the configuration of the application.
