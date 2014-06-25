@@ -55,7 +55,7 @@ class RedditPlugin(Plugin):
         self.options = {'mode': 'front', 'color': '#FFFFFF', 'interval': 30,
                         'subreddits': ['vim', 'python'], 'username': None,
                         'password': None, 'limit': 25, 'format': '[subreddit] title ↑ups',
-                        'sort': 'hot'}
+                        'sort': 'hot', 'max_chars': 140}
         super().__init__(config)
         if isinstance(self.options['subreddits'], str):
             self.options['subreddits'] = [self.options['subreddits']]
@@ -70,7 +70,13 @@ class RedditPlugin(Plugin):
         """
         self.manage_submissions()
         out_string = self.options['format']
-        self.selected_submission = self.submissions.pop()
+
+        # pop till we get something which len(title) <= max-chars
+        length = float('inf')
+        while length > self.options['max-chars']:
+            self.selected_submission = self.submissions.pop()
+            length = len(self.selected_submission['title'])
+        
         for k, v in self.selected_submission.items():
             out_string = out_string.replace(k, str(v))
         return self.output(out_string, out_string)
