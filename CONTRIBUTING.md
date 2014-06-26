@@ -6,11 +6,11 @@ Contributions are always welcomed, so start sending some PRs!
 
 Clone the repository:
 
-  git clone https://github.com/HarveyHunt/i3situation.git
+    git clone https://github.com/HarveyHunt/i3situation.git
   
 Change to the develop branch:
 
-  git checkout develop
+    git checkout develop
   
 Hack away until your heart is content.
 
