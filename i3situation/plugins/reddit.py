@@ -71,14 +71,14 @@ class RedditPlugin(Plugin):
         self.manage_submissions()
         out_string = self.options['format']
 
-        # pop till we get something which len(title) <= max-chars
+        # Pop until we get something which len(title) <= max-chars
         length = float('inf')
         while length > self.options['max-chars']:
             self.selected_submission = self.submissions.pop()
             length = len(self.selected_submission['title'])
-        
+
         for k, v in self.selected_submission.items():
-            out_string = out_string.replace(k, str(v))
+            out_string = out_string.replace(k, self.h.unescpae(str(v)))
         return self.output(out_string, out_string)
 
     def login(self):
