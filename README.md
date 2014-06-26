@@ -218,7 +218,7 @@ format=subreddit title ups
 sort=hot
 ```
 
-* **Max Characters*: The maximum number of characters that a Reddit thread title is allowed to have. If the Reddit thread title is longer than this value, the thread will be removed from the queue.
+* **Max Characters**: The maximum number of characters that a Reddit thread title is allowed to have. If the Reddit thread title is longer than this value, the thread will be removed from the queue.
 ```
 max_chars=140
 ```
