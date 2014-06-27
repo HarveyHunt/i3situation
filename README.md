@@ -150,7 +150,7 @@ format=artist -> title
 A plugin to display the current date and time. Has support for multiple time zones.
 
 Options:
-* **Time Zone**: The time zone that should be used when finding the time.
+* **Time Zone**: The time zone that should be used when finding the time. By default, Python will work this out by itself. Setting a value for time_zone will override that.
 
 ```
 time_zone=GMT
