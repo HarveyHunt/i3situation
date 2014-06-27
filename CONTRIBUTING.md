@@ -22,7 +22,7 @@ Running a code linter, such as [PyFlakes](https://launchpad.net/pyflakes) is alw
 
 The hard rules are as follows:
 
-  * 8 spaces per tab
+  * 4 spaces per tab
   * use_of_underscores_for_functions_variables_etc
   * Code should be pythonic.
   
