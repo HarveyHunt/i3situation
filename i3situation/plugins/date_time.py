@@ -9,13 +9,13 @@ __all__ = 'DateTimePlugin'
 class DateTimePlugin(Plugin):
 
     def __init__(self, config):
-        self.options = {'long_format': '%d-%m-%Y %H:%M:%S',
+        self.options = {'time_zone': None, 'long_format': '%d-%m-%Y %H:%M:%S',
                 'short_format': '%H:%M:%S', 'interval': 1, 'menu_command': ''}
         super().__init__(config)
 
     def main(self):
         cur = time.time()
-        if 'time_zone' in self.options:
+        if self.options['time_zone']: 
             os.environ['TZ'] = self.options['time_zone']
         time.tzset()
         long_time = time.strftime(self.options['long_format'], time.localtime(cur))
