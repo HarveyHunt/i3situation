@@ -32,7 +32,7 @@ class BatteryPlugin(Plugin):
         charge = (energy_now / energy_full) * 100 if self.options['percentage'] else 1
         charge = int(charge)
 
-        if charge < self.options['low_threshold'] and status == 'Discharging':
+        if charge < self.options['low_threshold']:
             self.output_options['color'] = self.options['low_color']
         elif status == 'Full':
             self.output_options['color'] = self.options['charging_color']
