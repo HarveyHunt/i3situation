@@ -483,8 +483,8 @@ self.output_options = {
     'align': None,
     'name': None,
     'urgent': None,
-    'seperator': None,
-    'seperator_block_width': None}
+    'separator': None,
+    'separator_block_width': None}
 ```
 
 For a full explanation of each output option, please refer to section 2.2 of

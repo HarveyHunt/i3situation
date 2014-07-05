@@ -18,8 +18,8 @@ class Plugin():
             'align': None,
             'name': None,
             'urgent': None,
-            'seperator': None,
-            'seperator_block_width': None}
+            'separator': None,
+            'separator_block_width': None}
         # Replace default values with user defined ones.
         self.options.update(config)
         # Allow output options to be overwritten by the user.
