@@ -60,6 +60,8 @@ amounts of expandability. The configuration file is automatically reloaded when
 any changes occur to it. Changing the content of a plugin file will also cause
 a reload of all plugins and settings.
 
+__Note:__ When using the % symbol in the config file, it needs to be escaped with another %.
+
 Plugins are configured in the config file. You must first denote a new plugin
 config section by using a unique name for that instance of a plugin. For example:
 
