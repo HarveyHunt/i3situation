@@ -33,7 +33,7 @@ You have written an awesome new feature and want to get it merged straight away-
 Documentation is an important part of any project, i3situation is no different. Document all new features, as has been done
 in the README already.
 
-If you're feeling especially kind and in a Python mood, try to add some unit tests for your new feature- or even more parts of i3sitation in general.
+If you're feeling especially kind and in a Python mood, try to add some unit tests for your new feature- or even more parts of i3situation in general.
 
 ## Sending PRs
   
