@@ -124,7 +124,7 @@ changing the colour of the output:
 The rest of the output options that can be edited are discussed in the Advanced Plugin 
 Options section of this document.
 
-My personal i3situation configuration file can be found with my [dotfiles](https://github.com/harvey_hunt/dotfiles).
+My personal i3situation configuration file can be found with my [dotfiles](https://github.com/HarveyHunt/dotfiles).
     
 Plugins
 ============
