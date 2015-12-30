@@ -244,7 +244,16 @@ text=Hello World
 ```
 
 ## Conky
-A plugin to allow conky's output to be displayed. It is required that you have a valid .conkyrc
+A plugin to allow conky's output to be displayed. It is required that you have a valid .conkyrc that outputs to ```stdout```, such as:
+
+```
+conky.config = { 
+...
+ out_to_console = true,
+ out_to_x = false,
+...
+}
+```
 
 * **Command**: The conky command to be executed.
 
